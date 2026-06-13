@@ -1,0 +1,1 @@
+// FSD: https://feature-sliced.design/ru/docs/guides/tech/with-nextjs
