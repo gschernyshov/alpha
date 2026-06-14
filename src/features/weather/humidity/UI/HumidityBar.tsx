@@ -29,7 +29,7 @@ export const HumidityBar = () => {
           <WeatherCardContent value={humidity} date={date} unit={'%'} />
 
           <WeatherCardFooter>
-            <div className="relative h-16 w-full bg-gray-100 rounded-xl">
+            <div className="relative h-16 w-full bg-gray-100 rounded-xl overflow-hidden">
               <div
                 className="absolute h-full bg-sky-300 transition-width duration-300 ease-out"
                 style={{ width: `${safeHumidity}%` }}

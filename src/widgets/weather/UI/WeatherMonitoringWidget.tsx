@@ -1,6 +1,6 @@
 'use client'
 
-import { useWeatherPolling } from '@/src/features/weather'
+import { useWeatherPolling } from '@/features/weather'
 
 export const WeatherMonitoringWidget = () => {
   useWeatherPolling({ intervalMs: 15000 })

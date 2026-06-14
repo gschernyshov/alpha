@@ -25,7 +25,7 @@ export const ToggleMode = ({ mode, onMode }: ToggleModeProps) => {
       <ToggleGroupItem
         value="home"
         className={cn(
-          'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300',
+          'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
           mode === 'home'
             ? 'bg-white shadow-sm text-gray-900'
             : 'text-gray-500 hover:text-gray-700'
@@ -38,7 +38,7 @@ export const ToggleMode = ({ mode, onMode }: ToggleModeProps) => {
       <ToggleGroupItem
         value="city"
         className={cn(
-          'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300',
+          'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
           mode === 'city'
             ? 'bg-white shadow-sm text-gray-900'
             : 'text-gray-500 hover:text-gray-700'

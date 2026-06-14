@@ -1,4 +1,4 @@
-import { WeatherWidget, WeatherMonitoringWidget } from '@/src/widgets/weather'
+import { WeatherWidget, WeatherMonitoringWidget } from '@/widgets/weather'
 
 export const WeatherPage = () => {
   return (

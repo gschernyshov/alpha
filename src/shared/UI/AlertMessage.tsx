@@ -1,9 +1,5 @@
 import { InfoIcon } from 'lucide-react'
-import {
-  Alert,
-  AlertTitle,
-  AlertDescription,
-} from '@/src/shared/UI/shadcn/alert'
+import { Alert, AlertTitle, AlertDescription } from '@/shared/UI/shadcn/alert'
 
 interface AlertMessageProps {
   title?: string
