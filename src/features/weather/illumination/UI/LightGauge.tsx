@@ -8,6 +8,7 @@ import {
   UpdateInfo,
   useWeatherStore,
 } from '@/entities/weather'
+import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
 
 const MAX_LUX = 1024
 
@@ -76,8 +77,16 @@ export function LightGauge() {
                 
               "
             >
-              <div className="text-8xl text-black dark:text-white font-semibold tracking-tighter leading-none select-none">
-                {Math.round(safeIllumination)}%
+              <div className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none">
+                {safeIllumination ? (
+                  <NumberTicker
+                    value={safeIllumination}
+                    className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
+                  />
+                ) : (
+                  '--'
+                )}
+                %
               </div>
             </div>
           </div>
