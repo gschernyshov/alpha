@@ -9,11 +9,15 @@ import {
   useWeatherStore,
 } from '@/entities/weather'
 
+const MAX_LUX = 1024
+
 export function LightGauge() {
   const { value: illumination, date } = useWeatherStore(
-    state => state.temperature
+    state => state.illumination
   )
-  const safeIllumination = Math.max(0, Math.min(100, illumination ?? 0))
+  const safeIllumination = illumination
+    ? Math.min(100, Math.max(0, (illumination / MAX_LUX) * 100))
+    : 0
 
   return (
     <WeatherCard colors={['#facc15', '#f59e0b']}>

@@ -13,7 +13,7 @@ import {
 import { AlertMessage } from '@/shared/UI/AlertMessage'
 
 export const HumidityBar = () => {
-  const { value: humidity, date } = useWeatherStore(state => state.temperature)
+  const { value: humidity, date } = useWeatherStore(state => state.humidity)
   const [mode, setMode] = useState<Mode>('home')
 
   const safeHumidity = Math.min(100, Math.max(0, humidity ?? 0))
