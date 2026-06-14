@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/shared/db/prisma'
+import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const API_KEY = process.env.API_KEY
 
@@ -41,6 +42,14 @@ export const sensor = async (request: Request) => {
           illumination,
         },
       })
+
+      try {
+        await sendTelegramMessage(`
+          Температура: ${temperature} °C.
+          Влажность: ${Math.min(100, Math.max(0, humidity))} %.
+          Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100))} %.
+        `)
+      } catch {}
 
       return NextResponse.json(
         { message: 'Data saved successfully' },
