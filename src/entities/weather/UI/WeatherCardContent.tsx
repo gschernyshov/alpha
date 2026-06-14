@@ -25,7 +25,7 @@ export const WeatherCardContent = ({
     <div className="space-y-5">
       <div className="flex gap-4">
         <span className="text-8xl text-black dark:text-white font-semibold tracking-tighter leading-none select-none">
-          {value ? (
+          {value !== null ? (
             <NumberTicker
               value={value}
               className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"

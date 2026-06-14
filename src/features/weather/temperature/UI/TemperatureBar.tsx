@@ -87,7 +87,7 @@ export const TemperatureBar = () => {
           <>
             <WeatherCardContent
               value={
-                temperature
+                temperature !== null
                   ? Number(convertTemp(temperature, unit).toFixed(1))
                   : null
               }

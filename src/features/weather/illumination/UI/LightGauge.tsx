@@ -78,7 +78,7 @@ export function LightGauge() {
               "
             >
               <div className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none">
-                {safeIllumination ? (
+                {safeIllumination !== null ? (
                   <NumberTicker
                     value={safeIllumination}
                     className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"

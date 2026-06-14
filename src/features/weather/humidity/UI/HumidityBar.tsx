@@ -26,7 +26,7 @@ export const HumidityBar = () => {
         <AlertMessage message="К сожалению, данный раздел находится на этапе разработки!" />
       ) : (
         <>
-          <WeatherCardContent value={humidity} date={date} unit={'%'} />
+          <WeatherCardContent value={safeHumidity} date={date} unit={'%'} />
 
           <WeatherCardFooter>
             <div className="relative h-16 w-full bg-gray-100 rounded-xl overflow-hidden">
