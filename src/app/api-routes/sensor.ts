@@ -45,9 +45,7 @@ export const sensor = async (request: Request) => {
 
       try {
         await sendTelegramMessage(`
-          Температура: ${temperature} °C.
-          Влажность: ${Math.min(100, Math.max(0, humidity))} %.
-          Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100))} %.
+          Температура: ${temperature} °C.<br/>Влажность: ${Math.min(100, Math.max(0, humidity))} %.<br/>Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100))} %.
         `)
       } catch {}
 
