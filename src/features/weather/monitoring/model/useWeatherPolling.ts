@@ -29,12 +29,15 @@ export const useWeatherPolling = ({
         useWeatherStore.getState().setWeather({
           temperature: {
             value: data.temperature,
-            date: new Date().toISOString(),
+            date: data.date,
           },
-          humidity: { value: data.humidity, date: new Date().toISOString() },
+          humidity: {
+            value: data.humidity,
+            date: data.date,
+          },
           illumination: {
             value: data.illumination,
-            date: new Date().toISOString(),
+            date: data.date,
           },
         })
       } catch (error) {

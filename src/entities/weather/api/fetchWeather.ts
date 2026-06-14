@@ -1,5 +1,5 @@
 import { WeatherApiResponse } from '../model/types'
-import { apiClient } from '@/src/shared/api/client'
+import { apiClient } from '@/shared/api/client'
 
 export const fetchWeather = async (
   signal?: AbortSignal

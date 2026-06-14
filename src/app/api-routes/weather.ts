@@ -1,11 +1,31 @@
 import { NextResponse } from 'next/server'
+import prisma from '@/shared/db/prisma'
 
 export const weather = async () => {
-  const mockData = {
-    temperature: +(Math.random() * 30).toFixed(1),
-    humidity: Math.floor(Math.random() * 100),
-    illumination: Math.floor(Math.random() * 1000),
-  }
+  try {
+    const latestWeather = await prisma.weather.findFirst({
+      orderBy: { createdAt: 'desc' },
+    })
 
-  return NextResponse.json(mockData)
+    if (!latestWeather) {
+      return NextResponse.json(
+        { error: 'Данные о погоде не найдены' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      temperature: latestWeather.temperature,
+      humidity: latestWeather.humidity,
+      illumination: latestWeather.illumination,
+      date: latestWeather.createdAt,
+    })
+  } catch (error) {
+    console.error('Внутренняя ошибка сервера: ', error)
+
+    return NextResponse.json(
+      { error: 'Внутренняя ошибка сервера' },
+      { status: 500 }
+    )
+  }
 }

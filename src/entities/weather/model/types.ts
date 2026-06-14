@@ -10,4 +10,5 @@ export type WeatherApiResponse = {
   temperature: number
   humidity: number
   illumination: number
+  date: string
 }

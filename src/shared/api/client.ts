@@ -12,6 +12,7 @@ apiClient.interceptors.response.use(
   response => response,
   error => {
     console.error('API Error: ', error.message)
+
     return Promise.reject(error)
   }
 )
