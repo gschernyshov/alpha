@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { AppProvider } from './AppProvider'
 import { StylesProvider } from './StylesProvider'
 
 interface ProvidersProps {
@@ -6,5 +7,9 @@ interface ProvidersProps {
 }
 
 export const Providers = ({ children }: ProvidersProps) => {
-  return <StylesProvider>{children}</StylesProvider>
+  return (
+    <AppProvider>
+      <StylesProvider>{children}</StylesProvider>
+    </AppProvider>
+  )
 }
