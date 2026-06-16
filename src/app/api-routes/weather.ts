@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/shared/db/prisma'
-import { Weather } from '@/shared/db/generated/prisma/client'
+import type { Weather } from '@/shared/db/generated/prisma/client'
 import { openWeatherClient } from '@/shared/api'
 
 interface IndoorData {

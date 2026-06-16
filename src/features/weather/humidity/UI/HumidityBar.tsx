@@ -1,67 +1,63 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Droplet, Flame } from 'lucide-react'
 import {
   WeatherCard,
   WeatherCardHeader,
   WeatherCardContent,
   WeatherCardFooter,
-  useWeatherStore,
   type Mode,
+  useWeatherStore,
+  safeValue,
 } from '@/entities/weather'
-import { AlertMessage } from '@/shared/UI/AlertMessage'
 
 export const HumidityBar = () => {
   const { humidity: indoorHumidity, date: indoorDate } = useWeatherStore(
     state => state.indoor
   )
-  const {
-    humidity: outdoorHumidity,
-
-    time: outdoorTime,
-  } = useWeatherStore(state => state.outdoor)
+  const { humidity: outdoorHumidity, time: outdoorTime } = useWeatherStore(
+    state => state.outdoor
+  )
 
   const [mode, setMode] = useState<Mode>('home')
 
   const { humidity, date } = useMemo(() => {
     if (mode === 'home') {
-      return { humidity: indoorHumidity, date: indoorDate }
+      return { humidity: safeValue(indoorHumidity), date: indoorDate }
     } else {
-      return { humidity: outdoorHumidity, date: outdoorTime }
+      return { humidity: safeValue(outdoorHumidity), date: outdoorTime }
     }
   }, [mode, indoorHumidity, indoorDate, outdoorHumidity, outdoorTime])
-
-  const safeHumidity = Math.min(100, Math.max(0, humidity ?? 0))
 
   return (
     <WeatherCard colors={['#1e90ff', '#87ceeb']}>
       <WeatherCardHeader title={'Влажность'} mode={mode} onMode={setMode} />
 
       <WeatherCardContent
-        value={safeHumidity}
+        value={humidity}
+        unit={'%'}
         otherValues={mode === 'home' ? null : { humidity }}
         date={date}
-        unit={'%'}
       />
 
       <WeatherCardFooter>
-        <div className="relative h-16 w-full bg-gray-100 rounded-xl overflow-hidden">
+        <div className="relative w-full h-16 bg-gray-100 rounded-xl overflow-hidden">
           <div
             className="absolute h-full bg-sky-300 transition-width duration-300 ease-out"
-            style={{ width: `${safeHumidity}%` }}
+            style={{ width: `${humidity}%` }}
           />
         </div>
 
         <div className="flex justify-between gap-4 text-muted-foreground">
           <div className="flex items-center gap-2">
-            <Flame className="h-4 w-4" />
+            <Flame className="w-4 h-4" />
             <p className="text-sm tracking-wide leading-none select-none">
               Сухо
             </p>
           </div>
           <div className="flex items-center gap-2 text-sky-300">
-            <Droplet className="h-4 w-4" />
+            <Droplet className="w-4 h-4" />
             <p className="text-sm text-sky-300 tracking-wide leading-none select-none">
               Влажно
             </p>

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { geistSans, geistMono } from '@/shared/lib/fonts'
+import '../globals.css'
 
 interface AppProviderProps {
   children: ReactNode

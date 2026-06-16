@@ -1,4 +1,4 @@
-import { Mode } from '../model/types'
+import type { Mode } from '../model/types'
 import { ToggleMode } from '@/entities/weather/UI/ToggleMode'
 
 interface WeatherCardHeaderProps {

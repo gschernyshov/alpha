@@ -1,4 +1,4 @@
-import { WeatherApiResponse } from '../model/types'
+import type { WeatherApiResponse } from '../model/types'
 import { apiClient } from '@/shared/api/client'
 
 export const fetchWeather = async (

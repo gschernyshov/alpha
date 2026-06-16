@@ -8,8 +8,9 @@ import {
   WeatherCardContent,
   WeatherCardFooter,
   convertTemp,
-  useWeatherStore,
   type Mode,
+  useWeatherStore,
+  safeValue,
 } from '@/entities/weather'
 
 export const TemperatureBar = () => {
@@ -18,10 +19,10 @@ export const TemperatureBar = () => {
   )
   const {
     temp: outdoorTemp,
+    time: outdoorTime,
     feelsLike,
     pressure,
     windSpeed,
-    time: outdoorTime,
   } = useWeatherStore(state => state.outdoor)
 
   const [mode, setMode] = useState<Mode>('home')
@@ -29,9 +30,9 @@ export const TemperatureBar = () => {
 
   const { temperature, date } = useMemo(() => {
     if (mode === 'home') {
-      return { temperature: indoorTemp, date: indoorDate }
+      return { temperature: indoorTemp ?? 0, date: indoorDate }
     } else {
-      return { temperature: outdoorTemp, date: outdoorTime }
+      return { temperature: outdoorTemp ?? 0, date: outdoorTime }
     }
   }, [mode, indoorTemp, indoorDate, outdoorTemp, outdoorTime])
 
@@ -52,13 +53,9 @@ export const TemperatureBar = () => {
   }, [])
 
   const percent = useMemo(() => {
-    if (temperature == null || Number.isNaN(temperature)) return 0
     if (minTemp === maxTemp) return 0
 
-    return Math.max(
-      0,
-      Math.min(100, ((temperature - minTemp) / (maxTemp - minTemp)) * 100)
-    )
+    return safeValue(((temperature - minTemp) / (maxTemp - minTemp)) * 100)
   }, [temperature, minTemp, maxTemp])
 
   const gradient = useMemo(() => {
@@ -96,17 +93,13 @@ export const TemperatureBar = () => {
         <WeatherCardHeader title={'Температура'} mode={mode} onMode={setMode} />
 
         <WeatherCardContent
-          value={
-            temperature !== null
-              ? Number(convertTemp(temperature, unit).toFixed(1))
-              : null
-          }
+          value={convertTemp(temperature, unit)}
+          unit={unit === 'C' ? '°C' : unit === 'F' ? '°F' : 'K'}
+          onUnit={toggleUnit}
           otherValues={
             mode === 'home' ? null : { feelsLike, pressure, windSpeed }
           }
           date={date}
-          unit={unit === 'C' ? '°C' : unit === 'F' ? '°F' : 'K'}
-          onUnit={toggleUnit}
         />
 
         <WeatherCardFooter>
@@ -117,14 +110,14 @@ export const TemperatureBar = () => {
               animation: 'hueShift 3s ease-in-out infinite',
             }}
           >
-            <div className="relative h-full w-[calc(100%-10px)]">
+            <div className="relative w-[calc(100%-10px)] h-full">
               <div
                 className="
-                      absolute top-1/2
-                      -translate-x-1/2 -translate-y-1/2 
-                      h-8 w-[2.2px] bg-black rounded-full
-                      transition-left duration-500 ease-out
-                    "
+                  absolute top-1/2
+                  -translate-x-1/2 -translate-y-1/2 
+                  h-8 w-[2.2px] bg-black rounded-full
+                  transition-left duration-500 ease-out
+                "
                 style={{
                   left: `${percent}%`,
                 }}
@@ -136,7 +129,7 @@ export const TemperatureBar = () => {
             {moods.map(mood => (
               <div key={mood.label} className="flex items-center gap-2">
                 <span
-                  className="inline-block h-3 w-3 bg-black rounded-full"
+                  className="inline-block w-3 h-3 bg-black rounded-full"
                   style={{ background: mood.color }}
                 />
 

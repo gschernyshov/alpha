@@ -1,9 +1,9 @@
 'use client'
 
 import { House, Globe } from 'lucide-react'
-import { Mode } from '../model/types'
+import type { Mode } from '../model/types'
+import { cn } from '@/shared/lib/utils'
 import { ToggleGroup, ToggleGroupItem } from '@/shared/UI/shadcn/toggle-group'
-import { cn } from '@/shared//lib/utils'
 
 interface ToggleModeProps {
   mode: Mode

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { ShineBorder } from '@/shared/UI/shadcn/shine-border'
 
 interface WeatherCardProps {

@@ -7,21 +7,28 @@ import {
   WeatherCardFooter,
   UpdateInfo,
   useWeatherStore,
+  safeValue,
 } from '@/entities/weather'
 import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
 
-const MAX_LUX = 1024
+const MAX_LUX = 2000
 
 export function LightGauge() {
-  const { illumination, date } = useWeatherStore(state => state.indoor)
+  const { illumination: indoorIllumination, date } = useWeatherStore(
+    state => state.indoor
+  )
 
-  const safeIllumination = illumination
-    ? Math.min(100, Math.max(0, (illumination / MAX_LUX) * 100))
-    : 0
+  const illumination = safeValue(
+    indoorIllumination && (indoorIllumination / MAX_LUX) * 100
+  )
 
   return (
     <WeatherCard colors={['#facc15', '#f59e0b']}>
-      <WeatherCardHeader title={' Уровень освещения'} />
+      <WeatherCardHeader
+        title={'Уровень освещения'}
+        mode={'home'}
+        onMode={() => {}}
+      />
 
       <WeatherCardFooter>
         <div className="flex flex-col gap-2 items-center w-full">
@@ -59,7 +66,7 @@ export function LightGauge() {
                 strokeLinecap="round"
                 pathLength={100}
                 strokeDasharray="100"
-                strokeDashoffset={100 - safeIllumination}
+                strokeDashoffset={100 - illumination}
                 className="transition-all duration-700 ease-out"
                 style={{
                   filter: 'drop-shadow(0 0 6px rgba(250,204,21,.35))',
@@ -77,14 +84,10 @@ export function LightGauge() {
               "
             >
               <div className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none">
-                {safeIllumination !== null ? (
-                  <NumberTicker
-                    value={safeIllumination}
-                    className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
-                  />
-                ) : (
-                  '--'
-                )}
+                <NumberTicker
+                  value={illumination}
+                  className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
+                />
                 %
               </div>
             </div>
@@ -92,16 +95,16 @@ export function LightGauge() {
 
           <div className="flex justify-between gap-4 min-w-[366px] text-muted-foreground">
             <div className="flex items-center gap-2">
-              <CloudMoon className="h-4 w-4" />
+              <CloudMoon className="w-4 h-4" />
               <p className="text-sm tracking-wide leading-none select-none">
                 Пещера
               </p>
             </div>
             <div className="flex items-center gap-2 text-[#f59e0b]">
-              <p className="text-sm text-[#f59e0b] tracking-wide leading-none select-none">
+              <p className="text-sm tracking-wide leading-none select-none">
                 Крематорий
               </p>
-              <Flame className="h-4 w-4" />
+              <Flame className="w-4 h-4" />
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-export * from './monitoring'
-export * from './temperature'
-export * from './humidity'
-export * from './illumination'
+export { useWeatherPolling } from './monitoring'
+export { TemperatureBar } from './temperature'
+export { HumidityBar } from './humidity'
+export { LightGauge } from './illumination'

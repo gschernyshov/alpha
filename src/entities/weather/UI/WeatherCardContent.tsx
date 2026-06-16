@@ -46,9 +46,9 @@ export const WeatherCardContent = ({
               <div className="flex flex-col justify-between gap-4 py-4">
                 <p
                   className="
-                text-xl text-black dark:text-white
-                font-semibold tracking-tighter leading-none select-none
-              "
+                    text-xl text-black dark:text-white
+                    font-semibold tracking-tighter leading-none select-none
+                  "
                 >
                   {unit}
                 </p>
@@ -58,15 +58,15 @@ export const WeatherCardContent = ({
                     className="p-1.5 bg-black dark:bg-white rounded-full cursor-pointer"
                     onClick={onUnit}
                   >
-                    <Thermometer className="h-3 w-3 text-white dark:text-black" />
+                    <Thermometer className="w-3 h-3 text-white dark:text-black" />
                   </span>
                 )}
               </div>
             )}
           </div>
 
-          {otherValues && otherValues.feelsLike != null && (
-            <span className="text-xs uppercase  opacity-80 text-gray-500">
+          {otherValues?.feelsLike != null && (
+            <span className="uppercase text-sm text-muted-foreground tracking-tighter select-none">
               Ощущается <br />
               как {otherValues?.feelsLike.toFixed(0)} °C
             </span>
@@ -74,32 +74,30 @@ export const WeatherCardContent = ({
         </div>
 
         {otherValues && (
-          <div className="flex flex-col w-full items-center text-centertext-xs md:text-sm text-muted-foreground/90">
-            <div className="flex w-auto gap-8">
-              {otherValues.pressure != null && (
-                <div className="flex flex-col items-center gap-1">
-                  <CloudRain className="w-4 h-4 text-foreground opacity-80 mb-0.5" />
-                  <span className="text-md font-medium text-foreground">
-                    {Math.round(otherValues.pressure)} мм
-                  </span>
-                  <span className="text-xs uppercase tracking-wider opacity-70">
-                    Давление
-                  </span>
-                </div>
-              )}
+          <div className="flex gap-10">
+            {otherValues.pressure != null && (
+              <div className="flex flex-col items-center gap-1">
+                <CloudRain className="w-4 h-4 mb-0.5 text-foreground" />
+                <span className="text-md font-medium text-foreground">
+                  {Math.round(otherValues.pressure)} мм
+                </span>
+                <span className="uppercase text-xs text-muted-foreground tracking-wider">
+                  Давление
+                </span>
+              </div>
+            )}
 
-              {otherValues.windSpeed != null && (
-                <div className="flex flex-col items-center gap-1">
-                  <Wind className="w-4 h-4 text-foreground opacity-80 mb-0.5" />
-                  <span className="text-md font-medium text-foreground">
-                    {otherValues.windSpeed.toFixed(1)} м/с
-                  </span>
-                  <span className="text-xs uppercase tracking-wider opacity-70">
-                    Ветер
-                  </span>
-                </div>
-              )}
-            </div>
+            {otherValues.windSpeed != null && (
+              <div className="flex flex-col items-center gap-1">
+                <Wind className="w-4 h-4 mb-0.5 text-foreground" />
+                <span className="text-md font-medium text-foreground">
+                  {otherValues.windSpeed.toFixed(1)} м/с
+                </span>
+                <span className="uppercase text-xs text-muted-foreground tracking-wider">
+                  Ветер
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
