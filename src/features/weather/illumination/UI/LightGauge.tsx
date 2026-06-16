@@ -27,6 +27,7 @@ export function LightGauge() {
       <WeatherCardHeader
         title={'Уровень освещения'}
         mode={'home'}
+        availableModes={['home']}
         onMode={() => {}}
       />
 

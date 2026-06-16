@@ -32,7 +32,12 @@ export const HumidityBar = () => {
 
   return (
     <WeatherCard colors={['#1e90ff', '#87ceeb']}>
-      <WeatherCardHeader title={'Влажность'} mode={mode} onMode={setMode} />
+      <WeatherCardHeader
+        title={'Влажность'}
+        mode={mode}
+        availableModes={['home', 'city']}
+        onMode={setMode}
+      />
 
       <WeatherCardContent
         value={humidity}

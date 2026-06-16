@@ -4,12 +4,14 @@ import { ToggleMode } from '@/entities/weather/UI/ToggleMode'
 interface WeatherCardHeaderProps {
   title: string
   mode?: Mode
+  availableModes: Mode[]
   onMode?: (mode: Mode) => void
 }
 
 export const WeatherCardHeader = ({
   title,
   mode,
+  availableModes,
   onMode,
 }: WeatherCardHeaderProps) => {
   return (
@@ -23,7 +25,13 @@ export const WeatherCardHeader = ({
         {title}
       </p>
 
-      {mode && onMode && <ToggleMode mode={mode} onMode={onMode} />}
+      {mode && onMode && (
+        <ToggleMode
+          mode={mode}
+          availableModes={availableModes}
+          onMode={onMode}
+        />
+      )}
     </div>
   )
 }

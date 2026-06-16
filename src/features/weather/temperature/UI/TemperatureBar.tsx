@@ -90,7 +90,12 @@ export const TemperatureBar = () => {
       </style>
 
       <WeatherCard colors={['#1e90ff', '#87ceeb', '#ffa500', '#ff4500']}>
-        <WeatherCardHeader title={'Температура'} mode={mode} onMode={setMode} />
+        <WeatherCardHeader
+          title={'Температура'}
+          mode={mode}
+          availableModes={['home', 'city']}
+          onMode={setMode}
+        />
 
         <WeatherCardContent
           value={convertTemp(temperature, unit)}
