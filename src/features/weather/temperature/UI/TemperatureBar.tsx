@@ -11,15 +11,29 @@ import {
   useWeatherStore,
   type Mode,
 } from '@/entities/weather'
-import { AlertMessage } from '@/shared/UI/AlertMessage'
 
 export const TemperatureBar = () => {
-  const { value: temperature, date } = useWeatherStore(
-    state => state.temperature
+  const { temperature: indoorTemp, date: indoorDate } = useWeatherStore(
+    state => state.indoor
   )
+  const {
+    temp: outdoorTemp,
+    feelsLike,
+    pressure,
+    windSpeed,
+    time: outdoorTime,
+  } = useWeatherStore(state => state.outdoor)
 
   const [mode, setMode] = useState<Mode>('home')
   const [unit, setUnit] = useState<'C' | 'F' | 'K'>('C')
+
+  const { temperature, date } = useMemo(() => {
+    if (mode === 'home') {
+      return { temperature: indoorTemp, date: indoorDate }
+    } else {
+      return { temperature: outdoorTemp, date: outdoorTime }
+    }
+  }, [mode, indoorTemp, indoorDate, outdoorTemp, outdoorTime])
 
   const { minTemp, maxTemp } = useMemo(() => {
     if (moods.length === 0)
@@ -81,61 +95,58 @@ export const TemperatureBar = () => {
       <WeatherCard colors={['#1e90ff', '#87ceeb', '#ffa500', '#ff4500']}>
         <WeatherCardHeader title={'Температура'} mode={mode} onMode={setMode} />
 
-        {mode === 'city' ? (
-          <AlertMessage message="К сожалению, данный раздел находится на этапе разработки!" />
-        ) : (
-          <>
-            <WeatherCardContent
-              value={
-                temperature !== null
-                  ? Number(convertTemp(temperature, unit).toFixed(1))
-                  : null
-              }
-              date={date}
-              unit={unit === 'C' ? '°C' : unit === 'F' ? '°F' : 'K'}
-              onUnit={toggleUnit}
-            />
+        <WeatherCardContent
+          value={
+            temperature !== null
+              ? Number(convertTemp(temperature, unit).toFixed(1))
+              : null
+          }
+          otherValues={
+            mode === 'home' ? null : { feelsLike, pressure, windSpeed }
+          }
+          date={date}
+          unit={unit === 'C' ? '°C' : unit === 'F' ? '°F' : 'K'}
+          onUnit={toggleUnit}
+        />
 
-            <WeatherCardFooter>
+        <WeatherCardFooter>
+          <div
+            className="flex justify-center h-3 rounded-full"
+            style={{
+              background: gradient,
+              animation: 'hueShift 3s ease-in-out infinite',
+            }}
+          >
+            <div className="relative h-full w-[calc(100%-10px)]">
               <div
-                className="flex justify-center h-3 rounded-full"
-                style={{
-                  background: gradient,
-                  animation: 'hueShift 3s ease-in-out infinite',
-                }}
-              >
-                <div className="relative h-full w-[calc(100%-10px)]">
-                  <div
-                    className="
+                className="
                       absolute top-1/2
                       -translate-x-1/2 -translate-y-1/2 
                       h-8 w-[2.2px] bg-black rounded-full
                       transition-left duration-500 ease-out
                     "
-                    style={{
-                      left: `${percent}%`,
-                    }}
-                  />
-                </div>
-              </div>
+                style={{
+                  left: `${percent}%`,
+                }}
+              />
+            </div>
+          </div>
 
-              <div className="flex justify-between gap-4 text-muted-foreground">
-                {moods.map(mood => (
-                  <div key={mood.label} className="flex items-center gap-2">
-                    <span
-                      className="inline-block h-3 w-3 bg-black rounded-full"
-                      style={{ background: mood.color }}
-                    />
+          <div className="flex justify-between gap-4 text-muted-foreground">
+            {moods.map(mood => (
+              <div key={mood.label} className="flex items-center gap-2">
+                <span
+                  className="inline-block h-3 w-3 bg-black rounded-full"
+                  style={{ background: mood.color }}
+                />
 
-                    <p className="text-sm tracking-wide leading-none select-none">
-                      {mood.label}
-                    </p>
-                  </div>
-                ))}
+                <p className="text-sm tracking-wide leading-none select-none">
+                  {mood.label}
+                </p>
               </div>
-            </WeatherCardFooter>
-          </>
-        )}
+            ))}
+          </div>
+        </WeatherCardFooter>
       </WeatherCard>
     </>
   )

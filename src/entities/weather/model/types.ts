@@ -6,9 +6,23 @@ export type WeatherDate = string | null
 export type UnitTemp = 'C' | 'F' | 'K'
 export type Mode = 'home' | 'city'
 
+export type WeatherIndoor = {
+  temperature: Temperature
+  humidity: Humidity
+  illumination: Illumination
+  date: WeatherDate
+}
+
+export type WeatherOutdoor = {
+  temp: number | null
+  feelsLike: number | null
+  humidity: number | null
+  pressure: number | null
+  windSpeed: number | null
+  time: string | null
+}
+
 export type WeatherApiResponse = {
-  temperature: number
-  humidity: number
-  illumination: number
-  date: string
+  indoor: WeatherIndoor
+  outdoor: WeatherOutdoor
 }

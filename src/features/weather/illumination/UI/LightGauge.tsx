@@ -13,9 +13,8 @@ import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
 const MAX_LUX = 1024
 
 export function LightGauge() {
-  const { value: illumination, date } = useWeatherStore(
-    state => state.illumination
-  )
+  const { illumination, date } = useWeatherStore(state => state.indoor)
+
   const safeIllumination = illumination
     ? Math.min(100, Math.max(0, (illumination / MAX_LUX) * 100))
     : 0

@@ -26,20 +26,7 @@ export const useWeatherPolling = ({
       try {
         const data = await fetchWeather(abortController.signal)
 
-        useWeatherStore.getState().setWeather({
-          temperature: {
-            value: data.temperature,
-            date: data.date,
-          },
-          humidity: {
-            value: data.humidity,
-            date: data.date,
-          },
-          illumination: {
-            value: data.illumination,
-            date: data.date,
-          },
-        })
+        useWeatherStore.getState().setWeather(data)
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Weather request cancelled')
