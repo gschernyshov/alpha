@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/shared/db/prisma'
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/shared/db/prisma'
 import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const API_KEY = process.env.API_KEY
 
-export const sensor = async (request: Request) => {
+export const sensor = async (request: NextRequest): Promise<NextResponse> => {
   try {
     const apiKey = request.headers.get('x-api-key')
     if (apiKey !== API_KEY) {
@@ -42,27 +42,32 @@ export const sensor = async (request: Request) => {
           illumination,
         },
       })
-
-      try {
-        await sendTelegramMessage(
-          `Температура: ${temperature.toFixed(1)} °C\n` +
-            `Влажность: ${Math.min(100, Math.max(0, humidity)).toFixed(1)} %\n` +
-            `Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100)).toFixed(1)} %`
-        )
-      } catch {}
-
-      return NextResponse.json(
-        { message: 'Data saved successfully' },
-        { status: 200 }
-      )
     } catch (error) {
-      console.error('Ошибка базы данных:', error)
+      console.warn(
+        'Ошибка добавления данных метеостанции в БД (Prisma ORM): ',
+        error
+      )
 
       return NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 }
       )
     }
+
+    try {
+      await sendTelegramMessage(
+        `Температура: ${temperature.toFixed(1)} °C\n` +
+          `Влажность: ${Math.min(100, Math.max(0, humidity)).toFixed(1)} %\n` +
+          `Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100)).toFixed(1)} %`
+      )
+    } catch (error) {
+      console.warn('Ошибка отправки сообщения в Telegram: ', error)
+    }
+
+    return NextResponse.json(
+      { message: 'Data saved successfully' },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
