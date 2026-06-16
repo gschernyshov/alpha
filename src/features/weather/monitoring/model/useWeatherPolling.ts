@@ -1,13 +1,19 @@
 import { useEffect } from 'react'
 import axios from 'axios'
-import { useWeatherStore, fetchWeather } from '@/entities/weather'
+import {
+  type WeatherApiResponse,
+  useWeatherStore,
+  fetchWeather,
+} from '@/entities/weather'
 
-type UseWeatherPollingProps = {
+interface UseWeatherPollingProps {
+  weather: WeatherApiResponse
   intervalMs?: number
   enabled?: boolean
 }
 
 export const useWeatherPolling = ({
+  weather,
   intervalMs = 10000,
   enabled = true,
 }: UseWeatherPollingProps) => {
@@ -36,7 +42,11 @@ export const useWeatherPolling = ({
       }
     }
 
-    fetchData()
+    if (weather) {
+      useWeatherStore.getState().setWeather(weather)
+    } else {
+      fetchData()
+    }
 
     intervalId = setInterval(fetchData, intervalMs)
 
@@ -44,5 +54,5 @@ export const useWeatherPolling = ({
       if (intervalId) clearInterval(intervalId)
       if (abortController) abortController.abort()
     }
-  }, [intervalMs, enabled])
+  }, [weather, intervalMs, enabled])
 }

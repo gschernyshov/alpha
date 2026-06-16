@@ -1,1 +1,1 @@
-export { WeatherPage as default } from '@/pages/weather'
+export { renderWeatherPage as default } from '@/pages/weather'
