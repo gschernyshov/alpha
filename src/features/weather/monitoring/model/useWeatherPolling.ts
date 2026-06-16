@@ -7,7 +7,7 @@ import {
 } from '@/entities/weather'
 
 interface UseWeatherPollingProps {
-  weather: WeatherApiResponse
+  weather?: WeatherApiResponse
   intervalMs?: number
   enabled?: boolean
 }

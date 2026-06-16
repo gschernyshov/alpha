@@ -1,2 +1,2 @@
 export const dynamic = 'force-dynamic'
-export { renderWeatherPage as default } from '@/pages/weather'
+export { WeatherPage as default } from '@/pages/weather'

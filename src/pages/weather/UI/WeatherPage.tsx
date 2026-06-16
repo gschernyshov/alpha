@@ -1,11 +1,9 @@
 import { WeatherWidget, WeatherMonitoringWidget } from '@/widgets/weather'
-import type { WeatherApiResponse } from '@/entities/weather'
+import { fetchWeather } from '@/entities/weather'
 
-interface WeatherPageProps {
-  weather: WeatherApiResponse
-}
+export const WeatherPage = async () => {
+  const weather = await fetchWeather()
 
-export const WeatherPage = ({ weather }: WeatherPageProps) => {
   return (
     <>
       <WeatherWidget />
