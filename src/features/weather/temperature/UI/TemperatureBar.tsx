@@ -2,18 +2,20 @@
 
 import { useState, useMemo } from 'react'
 import { moods } from '../model/mood'
+import { useModeStore } from '../model/modeStore'
 import {
   WeatherCard,
   WeatherCardHeader,
   WeatherCardContent,
   WeatherCardFooter,
   convertTemp,
-  type Mode,
   useWeatherStore,
   safeValue,
 } from '@/entities/weather'
 
 export const TemperatureBar = () => {
+  const { mode, setMode } = useModeStore()
+
   const { temperature: indoorTemp, date: indoorDate } = useWeatherStore(
     state => state.indoor
   )
@@ -25,7 +27,6 @@ export const TemperatureBar = () => {
     windSpeed,
   } = useWeatherStore(state => state.outdoor)
 
-  const [mode, setMode] = useState<Mode>('home')
   const [unit, setUnit] = useState<'C' | 'F' | 'K'>('C')
 
   const { temperature, date } = useMemo(() => {

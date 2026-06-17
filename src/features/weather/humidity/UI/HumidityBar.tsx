@@ -1,26 +1,26 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Droplet, Flame } from 'lucide-react'
+import { useModeStore } from '../model/modeStore'
 import {
   WeatherCard,
   WeatherCardHeader,
   WeatherCardContent,
   WeatherCardFooter,
-  type Mode,
   useWeatherStore,
   safeValue,
 } from '@/entities/weather'
 
 export const HumidityBar = () => {
+  const { mode, setMode } = useModeStore()
+
   const { humidity: indoorHumidity, date: indoorDate } = useWeatherStore(
     state => state.indoor
   )
   const { humidity: outdoorHumidity, time: outdoorTime } = useWeatherStore(
     state => state.outdoor
   )
-
-  const [mode, setMode] = useState<Mode>('home')
 
   const { humidity, date } = useMemo(() => {
     if (mode === 'home') {
