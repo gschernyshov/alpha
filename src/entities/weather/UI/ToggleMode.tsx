@@ -33,7 +33,7 @@ export const ToggleMode = ({
           className={cn(
             'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
             mode === 'home'
-              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-muted-foreground'
+              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-secondary'
               : 'text-secondary-foreground hover:text-muted-foreground'
           )}
         >
@@ -48,7 +48,7 @@ export const ToggleMode = ({
           className={cn(
             'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
             mode === 'city'
-              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-muted-foreground'
+              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-secondary'
               : 'text-secondary-foreground hover:text-muted-foreground'
           )}
         >
