@@ -66,7 +66,7 @@ export const WeatherCardContent = ({
           </div>
 
           {otherValues?.feelsLike != null && (
-            <span className="uppercase text-sm text-muted-foreground tracking-tighter select-none">
+            <span className="uppercase text-sm text-muted-foreground tracking-tighter select-none whitespace-nowrap">
               Ощущается как {otherValues?.feelsLike.toFixed(0)} °C
             </span>
           )}
@@ -77,7 +77,7 @@ export const WeatherCardContent = ({
             {otherValues.pressure != null && (
               <div className="flex flex-col items-center gap-1">
                 <CloudRain className="w-4 h-4 mb-0.5 text-foreground" />
-                <span className="text-md font-medium text-foreground">
+                <span className="text-md font-medium text-foreground text-center">
                   {Math.round(otherValues.pressure)} мм
                 </span>
                 <span className="uppercase text-xs text-muted-foreground tracking-wider">
@@ -89,7 +89,7 @@ export const WeatherCardContent = ({
             {otherValues.windSpeed != null && (
               <div className="flex flex-col items-center gap-1">
                 <Wind className="w-4 h-4 mb-0.5 text-foreground" />
-                <span className="text-md font-medium text-foreground">
+                <span className="text-md font-medium text-foreground text-center">
                   {otherValues.windSpeed.toFixed(1)} м/с
                 </span>
                 <span className="uppercase text-xs text-muted-foreground tracking-wider">
