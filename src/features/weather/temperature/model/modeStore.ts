@@ -13,7 +13,7 @@ type ModeActions = {
 type ModeStoreState = ModeState & ModeActions
 
 const initialState: ModeState = {
-  mode: 'default',
+  mode: 'home',
 }
 
 export const useModeStore = create<ModeStoreState>()(

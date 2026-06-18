@@ -8,7 +8,7 @@ interface WeatherCardProps {
 
 export const WeatherCard = ({ colors, children }: WeatherCardProps) => {
   return (
-    <div className="relative w-full md:max-w-md p-7 space-y-10 bg-white backdrop-blur-md rounded-3xl shadow-xl md:shadow-2xl font-geist-mono">
+    <div className="relative flex flex-col justify-between gap-8 w-full md:w-md p-7 card backdrop-blur-md rounded-3xl shadow-xl md:shadow-2xl dark:shadow-xs dark:shadow-foreground font-mono">
       <ShineBorder duration={10} shineColor={colors} />
       {children}
     </div>

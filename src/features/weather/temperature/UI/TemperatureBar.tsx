@@ -121,7 +121,7 @@ export const TemperatureBar = () => {
                 className="
                   absolute top-1/2
                   -translate-x-1/2 -translate-y-1/2 
-                  h-8 w-[2.2px] bg-black rounded-full
+                  h-8 w-[2.2px] bg-foreground rounded-full
                   transition-left duration-500 ease-out
                 "
                 style={{
@@ -135,7 +135,7 @@ export const TemperatureBar = () => {
             {moods.map(mood => (
               <div key={mood.label} className="flex items-center gap-2">
                 <span
-                  className="inline-block w-3 h-3 bg-black rounded-full"
+                  className="inline-block w-3 h-3 bg-gray-100 rounded-full"
                   style={{ background: mood.color }}
                 />
 

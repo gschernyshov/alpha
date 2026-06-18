@@ -5,5 +5,5 @@ interface WeatherCardFooterProps {
 }
 
 export const WeatherCardFooter = ({ children }: WeatherCardFooterProps) => {
-  return <div className="space-y-10">{children}</div>
+  return <div className="space-y-8">{children}</div>
 }

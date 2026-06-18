@@ -53,7 +53,7 @@ export function LightGauge() {
               <path
                 d="M6 186 A174 174 0 0 1 354 186"
                 fill="none"
-                stroke="rgba(0, 0, 0, 0.15)"
+                stroke="lab(96.1596% -.0823438 -1.13575)"
                 strokeWidth="12"
                 strokeLinecap="round"
               />
@@ -84,10 +84,10 @@ export function LightGauge() {
                 
               "
             >
-              <div className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none">
+              <div className="text-8xl text-foreground font-semibold tracking-tighter leading-none select-none">
                 <NumberTicker
                   value={illumination}
-                  className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
+                  className="text-8xl text-foreground font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
                 />
                 %
               </div>

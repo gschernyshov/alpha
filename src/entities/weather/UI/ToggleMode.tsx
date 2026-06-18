@@ -25,7 +25,7 @@ export const ToggleMode = ({
           onMode(value)
         }
       }}
-      className="flex gap-1.5 p-1 bg-gray-100 rounded-md"
+      className="flex gap-1.5 p-1 bg-secondary rounded-md"
     >
       {availableModes.includes('home') && (
         <ToggleGroupItem
@@ -33,8 +33,8 @@ export const ToggleMode = ({
           className={cn(
             'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
             mode === 'home'
-              ? 'bg-white shadow-sm text-gray-900'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-muted-foreground'
+              : 'text-secondary-foreground hover:text-muted-foreground'
           )}
         >
           <House className="w-4 h-4" />
@@ -48,8 +48,8 @@ export const ToggleMode = ({
           className={cn(
             'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
             mode === 'city'
-              ? 'bg-white shadow-sm text-gray-900'
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-muted-foreground'
+              : 'text-secondary-foreground hover:text-muted-foreground'
           )}
         >
           <Globe className="w-4 h-4" />

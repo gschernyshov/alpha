@@ -28,14 +28,14 @@ export const WeatherCardContent = ({
 }: WeatherCardContentProps) => {
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center gap-4 w-full">
+      <div className="flex justify-between items-center gap-10 w-full">
         <div className="flex flex-col items-start">
           <div className="flex gap-4">
-            <span className="text-8xl text-black dark:text-white font-semibold tracking-tighter leading-none select-none">
+            <span className="text-8xl text-foreground font-semibold tracking-tighter leading-none select-none">
               {value !== null ? (
                 <NumberTicker
                   value={value}
-                  className="text-8xl text-black dark:text-white font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
+                  className="text-8xl text-foreground font-semibold tracking-tighter whitespace-pre-wrap leading-none select-none"
                 />
               ) : (
                 '--'
@@ -46,7 +46,7 @@ export const WeatherCardContent = ({
               <div className="flex flex-col justify-between gap-4 py-4">
                 <p
                   className="
-                    text-xl text-black dark:text-white
+                    text-xl text-foreground
                     font-semibold tracking-tighter leading-none select-none
                   "
                 >
@@ -55,10 +55,10 @@ export const WeatherCardContent = ({
 
                 {onUnit && (
                   <span
-                    className="p-1.5 bg-black dark:bg-white rounded-full cursor-pointer"
+                    className="p-1.5 bg-foreground rounded-full cursor-pointer"
                     onClick={onUnit}
                   >
-                    <Thermometer className="w-3 h-3 text-white dark:text-black" />
+                    <Thermometer className="w-3 h-3 text-background" />
                   </span>
                 )}
               </div>
@@ -67,8 +67,7 @@ export const WeatherCardContent = ({
 
           {otherValues?.feelsLike != null && (
             <span className="uppercase text-sm text-muted-foreground tracking-tighter select-none">
-              Ощущается <br />
-              как {otherValues?.feelsLike.toFixed(0)} °C
+              Ощущается как {otherValues?.feelsLike.toFixed(0)} °C
             </span>
           )}
         </div>
