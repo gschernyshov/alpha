@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { stationClient } from '@/shared/api/stationClient'
+import { stationClient } from '@/shared/api'
 
 interface UseStationStatusProps {
   intervalMs?: number
