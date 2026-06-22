@@ -1,7 +1,7 @@
 'use client'
 
-import { House, Globe } from 'lucide-react'
 import type { Mode } from '../model/types'
+import { MODES, hasMode } from '../model/modes'
 import { cn } from '@/shared/lib/utils'
 import { ToggleGroup, ToggleGroupItem } from '@/shared/UI/shadcn/toggle-group'
 
@@ -21,41 +21,31 @@ export const ToggleMode = ({
       type="single"
       value={mode}
       onValueChange={value => {
-        if (value === 'home' || value === 'city') {
+        if (hasMode(value) && availableModes.includes(value)) {
           onMode(value)
         }
       }}
       className="flex gap-1.5 p-1 bg-secondary rounded-md"
     >
-      {availableModes.includes('home') && (
-        <ToggleGroupItem
-          value="home"
-          className={cn(
-            'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
-            mode === 'home'
-              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-secondary'
-              : 'text-secondary-foreground hover:text-muted-foreground'
-          )}
-        >
-          <House className="w-4 h-4" />
-          <span>Изба</span>
-        </ToggleGroupItem>
-      )}
+      {availableModes.map(availableMode => {
+        const { label, Icon } = MODES[availableMode]
 
-      {availableModes.includes('city') && (
-        <ToggleGroupItem
-          value="city"
-          className={cn(
-            'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
-            mode === 'city'
-              ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-secondary'
-              : 'text-secondary-foreground hover:text-muted-foreground'
-          )}
-        >
-          <Globe className="w-4 h-4" />
-          <span>Град</span>
-        </ToggleGroupItem>
-      )}
+        return (
+          <ToggleGroupItem
+            key={availableMode}
+            value={availableMode}
+            className={cn(
+              'flex gap-1.5 items-center px-2 py-1 rounded-md text-xs font-semibold transition-text duration-300 cursor-pointer',
+              mode === availableMode
+                ? 'bg-secondary-foreground! shadow-sm text-secondary hover:text-secondary'
+                : 'text-secondary-foreground hover:text-muted-foreground'
+            )}
+          >
+            <Icon className="w-4 h-4" />
+            <span>{label}</span>
+          </ToggleGroupItem>
+        )
+      })}
     </ToggleGroup>
   )
 }
