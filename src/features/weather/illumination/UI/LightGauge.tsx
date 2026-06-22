@@ -1,6 +1,7 @@
 'use client'
 
 import { CloudMoon, Flame } from 'lucide-react'
+import { ANCHOR_ILLUMINATION } from '../config/anchor'
 import {
   WeatherCard,
   WeatherCardHeader,
@@ -23,7 +24,7 @@ export function LightGauge() {
   )
 
   return (
-    <WeatherCard colors={['#facc15', '#f59e0b']}>
+    <WeatherCard id={ANCHOR_ILLUMINATION} colors={['#facc15', '#f59e0b']}>
       <WeatherCardHeader
         title={'Уровень освещения'}
         mode={'home'}

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Mode } from '@/entities/weather'
+import type { Mode } from '@/entities/weather'
 
 type ModeState = {
   mode: Mode

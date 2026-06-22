@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import { Droplet, Flame } from 'lucide-react'
 import { useModeStore } from '../model/modeStore'
+import { ANCHOR_HUMIDITY } from '../config/anchor'
 import {
   WeatherCard,
   WeatherCardHeader,
@@ -31,7 +32,7 @@ export const HumidityBar = () => {
   }, [mode, indoorHumidity, indoorDate, outdoorHumidity, outdoorTime])
 
   return (
-    <WeatherCard colors={['#1e90ff', '#87ceeb']}>
+    <WeatherCard id={ANCHOR_HUMIDITY} colors={['#1e90ff', '#87ceeb']}>
       <WeatherCardHeader
         title={'Влажность'}
         mode={mode}

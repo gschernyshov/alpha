@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { moods } from '../model/mood'
+import { moods } from '../config/mood'
+import { ANCHOR_TEMPERATURE } from '../config/anchor'
 import { useModeStore } from '../model/modeStore'
 import {
   WeatherCard,
@@ -90,7 +91,10 @@ export const TemperatureBar = () => {
         `}
       </style>
 
-      <WeatherCard colors={['#1e90ff', '#87ceeb', '#ffa500', '#ff4500']}>
+      <WeatherCard
+        id={ANCHOR_TEMPERATURE}
+        colors={['#1e90ff', '#87ceeb', '#ffa500', '#ff4500']}
+      >
         <WeatherCardHeader
           title={'Температура'}
           mode={mode}
