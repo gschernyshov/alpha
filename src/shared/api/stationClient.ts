@@ -1,42 +1,36 @@
 import axios, { type AxiosInstance } from 'axios'
 
-const OPENWEATHER_API_URL = process.env.OPENWEATHER_API_URL
-const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY
+const NEXT_PUBLIC_API_STATION_URL = process.env.NEXT_PUBLIC_API_STATION_URL
 
-export const openWeatherClient: AxiosInstance = axios.create({
-  baseURL: OPENWEATHER_API_URL,
-  timeout: 5000,
+export const stationClient: AxiosInstance = axios.create({
+  baseURL: NEXT_PUBLIC_API_STATION_URL,
+  timeout: 2000,
   headers: {
-    'User-Agent': 'MyWeatherApp/1.0 (github.com/gschernyshov)',
-  },
-  params: {
-    appid: OPENWEATHER_API_KEY,
-    units: 'metric',
-    lang: 'ru',
+    'Content-Type': 'application/json',
   },
 })
 
-openWeatherClient.interceptors.response.use(
+stationClient.interceptors.response.use(
   response => response,
   error => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         // Есть ответ от сервера, но с ошибкой
-        console.error('OpenWeather API. Server error:', {
+        console.error('API. Server error:', {
           headers: error.response.headers,
           status: error.response.status,
           data: error.response.data,
         })
       } else if (error.request) {
         // Запрос отправлен, но ответа нет
-        console.error('OpenWeather API. Network error (no response):', {
+        console.error('API. Network error (no response):', {
           message: error.message,
           config: error.config,
           request: error.request,
         })
       } else {
         // Ошибка при настройке запроса (например, bad URL)
-        console.error('OpenWeather API. Request setup error:', error.message)
+        console.error('API. Request setup error:', error.message)
       }
     }
 

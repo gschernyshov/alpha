@@ -1,7 +1,8 @@
 import axios, { type AxiosInstance } from 'axios'
 
+const TELEGRAM_API_URL = process.env.TELEGRAM_API_URL
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
-const TELEGRAM_API_BASE_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`
+const TELEGRAM_API_BASE_URL = `${TELEGRAM_API_URL}${TELEGRAM_BOT_TOKEN}`
 
 export const telegramClient: AxiosInstance = axios.create({
   baseURL: TELEGRAM_API_BASE_URL,
