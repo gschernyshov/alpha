@@ -3,13 +3,11 @@
 import { useWeatherPolling } from '@/features/weather'
 import type { WeatherApiResponse } from '@/entities/weather'
 
-interface WeatherMonitoringWidgetProps {
+interface WeatherMonitoringProps {
   weather?: WeatherApiResponse
 }
 
-export const WeatherMonitoringWidget = ({
-  weather,
-}: WeatherMonitoringWidgetProps) => {
+export const WeatherMonitoring = ({ weather }: WeatherMonitoringProps) => {
   useWeatherPolling({ weather, intervalMs: 15000 })
   return null
 }

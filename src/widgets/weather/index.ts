@@ -1,2 +1,3 @@
-export { WeatherWidget } from './UI/WeatherWidget'
-export { WeatherMonitoringWidget } from './UI/WeatherMonitoringWidget'
+export { WeatherHero } from './Hero'
+export { WeatherFeatures } from './Features'
+export { WeatherMonitoring } from './Monitoring'
