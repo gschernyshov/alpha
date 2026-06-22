@@ -15,7 +15,7 @@ export const WeatherCardHeader = ({
   onMode,
 }: WeatherCardHeaderProps) => {
   return (
-    <div className="flex justify-between gap-4 items-center">
+    <div className="flex flex-wrap justify-between gap-3 md:gap-4 items-center">
       <p
         className="
           uppercase text-md text-muted-foreground 
