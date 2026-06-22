@@ -44,10 +44,9 @@ export const HumidityBar = () => {
         value={humidity}
         unit={'%'}
         otherValues={mode === 'home' ? null : { humidity }}
-        date={date}
       />
 
-      <WeatherCardFooter>
+      <WeatherCardFooter date={date}>
         <div className="relative w-full h-16 bg-gray-100 rounded-xl overflow-hidden">
           <div
             className="absolute h-full bg-sky-300 transition-width duration-300 ease-out"

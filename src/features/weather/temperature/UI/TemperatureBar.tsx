@@ -109,10 +109,9 @@ export const TemperatureBar = () => {
           otherValues={
             mode === 'home' ? null : { feelsLike, pressure, windSpeed }
           }
-          date={date}
         />
 
-        <WeatherCardFooter>
+        <WeatherCardFooter date={date}>
           <div
             className="flex justify-center h-3 rounded-full"
             style={{

@@ -1,10 +1,8 @@
 import { Thermometer, CloudRain, Wind } from 'lucide-react'
-import { UpdateInfo } from './UpdateInfo'
 import {
   Temperature,
   Humidity,
   Illumination,
-  WeatherDate,
   WeatherOutdoor,
 } from '../model/types'
 import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
@@ -14,7 +12,6 @@ interface WeatherCardContentProps {
   otherValues: Partial<
     Pick<WeatherOutdoor, 'feelsLike' | 'pressure' | 'windSpeed' | 'humidity'>
   > | null
-  date: WeatherDate
   unit?: string
   onUnit?: () => void
 }
@@ -22,7 +19,6 @@ interface WeatherCardContentProps {
 export const WeatherCardContent = ({
   value,
   otherValues,
-  date,
   unit,
   onUnit,
 }: WeatherCardContentProps) => {
@@ -100,8 +96,6 @@ export const WeatherCardContent = ({
           </div>
         )}
       </div>
-
-      <UpdateInfo date={date} />
     </div>
   )
 }
