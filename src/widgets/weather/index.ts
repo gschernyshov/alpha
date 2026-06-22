@@ -1,3 +1,3 @@
-export { WeatherHero } from './Hero'
-export { WeatherFeatures } from './Features'
-export { WeatherMonitoring } from './Monitoring'
+export { WeatherHero } from './hero'
+export { WeatherFeatures } from './features'
+export { WeatherMonitoring } from './monitoring'
