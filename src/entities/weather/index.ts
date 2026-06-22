@@ -7,6 +7,7 @@ export { UpdateInfo } from './UI/UpdateInfo'
 export { fetchWeather } from './api/fetchWeather'
 
 export * from './model/types'
+export * from './model/modes'
 export { useWeatherStore } from './model/weatherStore'
 
 export { convertTemp } from './lib/convertTemp'
