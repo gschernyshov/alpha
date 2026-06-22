@@ -6,7 +6,7 @@ interface StationStatusProps {
   className?: string
 }
 
-export const StationStatus = ({ className }: StationStatusProps) => {
+export const StationStatus = ({ className = '' }: StationStatusProps) => {
   const status = useStationStatus({ intervalMs: 30000 })
 
   const statusText = {

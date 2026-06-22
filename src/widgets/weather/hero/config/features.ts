@@ -4,7 +4,7 @@ import {
   ANCHOR_HUMIDITY,
   ANCHOR_ILLUMINATION,
   ANCHOR_WATERING,
-} from '@/src/features/weather'
+} from '@/features/weather'
 
 export const features = [
   {
