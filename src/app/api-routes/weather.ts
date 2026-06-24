@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/shared/db/prisma'
 import type { Weather } from '@/shared/db/generated/prisma/client'
@@ -69,8 +70,8 @@ export const weather = async (): Promise<NextResponse> => {
         temperature: latestIndoor?.temperature ?? null,
         humidity: latestIndoor?.humidity ?? null,
         illumination: latestIndoor?.illumination ?? null,
-        date: latestIndoor?.createdAt
-          ? new Date(latestIndoor.createdAt).toISOString()
+        date: latestIndoor?.measuredAt
+          ? DateTime.fromJSDate(latestIndoor.measuredAt).toISO()
           : null,
       },
       outdoor: {
@@ -79,9 +80,7 @@ export const weather = async (): Promise<NextResponse> => {
         humidity: outdoorData?.main?.humidity ?? null,
         pressure: outdoorData?.main?.pressure ?? null,
         windSpeed: outdoorData?.wind?.speed ?? null,
-        time: outdoorData?.dt
-          ? new Date(outdoorData.dt * 1000).toISOString()
-          : null,
+        time: outdoorData?.dt ? DateTime.fromISO(outdoorData.dt).toISO() : null,
       },
     }
 
