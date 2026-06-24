@@ -5,7 +5,7 @@ import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 type Plant = {
   title: string
-  soilMoisture: string
+  soilMoisture: number
 }
 
 type Plants = Plant[]
@@ -67,12 +67,14 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
     }
 
     for (const plant of plants) {
-      const soilMoisture = parseFloat(plant.soilMoisture)
-
-      if (isNaN(soilMoisture)) {
+      if (
+        typeof plant.title !== 'string' ||
+        typeof plant.soilMoisture !== 'number' ||
+        Number.isNaN(plant.soilMoisture)
+      ) {
         return NextResponse.json(
           {
-            error: 'Invalid numeric values for soil moisture in plants',
+            error: 'Invalid plant data',
           },
           { status: 400 }
         )
@@ -109,8 +111,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
     }
 
     for (const plant of plants) {
-      const title = plant.title
-      const soilMoisture = parseFloat(plant.soilMoisture)
+      const { title, soilMoisture } = plant
 
       try {
         const { id } = (await prisma.plant.findUnique({
@@ -120,7 +121,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
 
         if (!id) {
           console.warn(
-            `Растение "${title}" не найдено в БД. Запись влажности почвы в БД почвы пропущена`
+            `Растение "${title}" не найдено в БД. Запись влажности почвы в БД пропущена`
           )
           continue
         }
