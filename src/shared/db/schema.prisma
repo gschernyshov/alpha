@@ -13,9 +13,78 @@ datasource db {
 }
 
 model Weather {
-  id            Int      @id @default(autoincrement())
-  temperature   Float
-  humidity      Int
-  illumination  Int
-  createdAt     DateTime @default(now())
+  id             Int        @id @default(autoincrement())
+
+  temperature    Float
+  humidity       Float
+  illumination   Float
+  measuredAt     DateTime   
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt  
+
+  @@index([measuredAt])
+}
+
+model Plant {
+  id              Int              @id @default(autoincrement())
+  
+  title           String           @unique
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt  
+
+  profile         PlantProfile?
+  soilMoistures   SoilMoisture[]              
+  waterLogs       WaterLog[] 
+
+  @@index([title])
+}
+
+model PlantProfile {
+  id                        Int      @id @default(autoincrement())
+
+  plantId                   Int      @unique
+  
+  name                      String              
+  latinName                 String
+  description               String     
+  lightRequirements         String
+  temperatureRequirements   String 
+  wateringRequirements      String
+  wateringIntervalDays      Int
+
+  plant                     Plant     @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@index([plantId, name, latinName])
+}
+
+model SoilMoisture {
+  id           Int        @id @default(autoincrement())
+
+  plantId      Int
+
+  value        Float     
+  measuredAt   DateTime  
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  plant        Plant      @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@index([plantId, measuredAt])
+}
+
+model WaterLog {
+  id               Int        @id @default(autoincrement())
+
+  plantId          Int
+  waterAt          DateTime  
+
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  plant            Plant      @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@index([plantId, waterAt])
 }

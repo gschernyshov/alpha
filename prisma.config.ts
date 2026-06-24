@@ -6,8 +6,8 @@ import { defineConfig } from 'prisma/config'
 export default defineConfig({
   schema: 'src/shared/db/schema.prisma',
   migrations: {
-    path: 'src/shared/db/schema.prisma',
-    seed: `tsx src/shared/db//seed.ts`,
+    path: 'src/shared/db/migrations/',
+    seed: `tsx src/shared/db/seed.ts`,
   },
   datasource: {
     url: process.env['DATABASE_URL'],
