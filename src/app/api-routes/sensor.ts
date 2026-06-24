@@ -1,24 +1,44 @@
+import { DateTime } from 'luxon'
 import { type NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/shared/db/prisma'
 import { sendTelegramMessage } from '@/shared/lib/telegram'
+
+type Plant = {
+  title: string
+  soilMoisture: string
+}
+
+type Plants = Plant[]
 
 const API_KEY = process.env.API_KEY
 
 export const sensor = async (request: NextRequest): Promise<NextResponse> => {
   try {
-    const apiKey = request.headers.get('x-api-key')
-    if (apiKey !== API_KEY) {
+    const xApiKey = request.headers.get('x-api-key')
+    if (xApiKey !== API_KEY) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { searchParams } = new URL(request.url)
+    const searchParams = request.nextUrl.searchParams
+
     const tempParam = searchParams.get('temp')
     const humParam = searchParams.get('hum')
     const illumParam = searchParams.get('illum')
+    const plantsParam = searchParams.get('plants')
+    const measuredParam = searchParams.get('measured')
 
-    if (!tempParam || !humParam || !illumParam) {
+    if (
+      !tempParam ||
+      !humParam ||
+      !illumParam ||
+      !plantsParam ||
+      !measuredParam
+    ) {
       return NextResponse.json(
-        { error: 'Missing parameters: temp, hum, illum are required' },
+        {
+          error:
+            'Missing required parameters: temp, hum, illum, plants, measured',
+        },
         { status: 400 }
       )
     }
@@ -29,10 +49,46 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
 
     if (isNaN(temperature) || isNaN(humidity) || isNaN(illumination)) {
       return NextResponse.json(
-        { error: 'Invalid numeric values for temp, hum, illum' },
+        {
+          error: 'Invalid numeric values for temp, hum, or illum',
+        },
         { status: 400 }
       )
     }
+
+    let plants: Plants
+    try {
+      plants = JSON.parse(plantsParam)
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in plants' },
+        { status: 400 }
+      )
+    }
+
+    for (const plant of plants) {
+      const soilMoisture = parseFloat(plant.soilMoisture)
+
+      if (isNaN(soilMoisture)) {
+        return NextResponse.json(
+          {
+            error: 'Invalid numeric values for soil moisture in plants',
+          },
+          { status: 400 }
+        )
+      }
+    }
+
+    const measured = DateTime.fromISO(measuredParam)
+
+    if (!measured.isValid) {
+      return NextResponse.json(
+        { error: 'Invalid date format for measured' },
+        { status: 400 }
+      )
+    }
+
+    const measuredISO = measured.toISO()
 
     try {
       await prisma.weather.create({
@@ -40,6 +96,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
           temperature,
           humidity,
           illumination,
+          measuredAt: measuredISO,
         },
       })
     } catch (error) {
@@ -48,10 +105,41 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
         error
       )
 
-      return NextResponse.json(
-        { error: 'Internal server error' },
-        { status: 500 }
-      )
+      throw error
+    }
+
+    for (const plant of plants) {
+      const title = plant.title
+      const soilMoisture = parseFloat(plant.soilMoisture)
+
+      try {
+        const { id } = (await prisma.plant.findUnique({
+          where: { title },
+          select: { id: true },
+        })) || { id: null }
+
+        if (!id) {
+          console.warn(
+            `Растение "${title}" не найдено в БД. Запись влажности почвы в БД почвы пропущена`
+          )
+          continue
+        }
+
+        await prisma.soilMoisture.create({
+          data: {
+            plantId: id,
+            value: soilMoisture,
+            measuredAt: measuredISO,
+          },
+        })
+      } catch (error) {
+        console.warn(
+          `Ошибка добавления данных влажности почвы в БД для "${title}": `,
+          error
+        )
+
+        throw error
+      }
     }
 
     try {
