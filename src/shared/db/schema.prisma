@@ -48,7 +48,8 @@ model PlantProfile {
   
   name                      String              
   latinName                 String
-  description               String     
+  img                       String?
+  description               String    
   lightRequirements         String
   temperatureRequirements   String 
   wateringRequirements      String
@@ -62,7 +63,7 @@ model PlantProfile {
 model SoilMoisture {
   id           Int        @id @default(autoincrement())
 
-  plantId      Int
+  plantId      Int 
 
   value        Float     
   measuredAt   DateTime  
