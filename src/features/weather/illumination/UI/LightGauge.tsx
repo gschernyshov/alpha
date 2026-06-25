@@ -1,18 +1,17 @@
 'use client'
 
 import { CloudMoon, Flame } from 'lucide-react'
+import { MAX_LUX } from '../model/lux'
 import { ANCHOR_ILLUMINATION } from '../config/anchor'
 import {
   WeatherCard,
   WeatherCardHeader,
   WeatherCardFooter,
-  UpdateInfo,
   useWeatherStore,
+  initMode,
   safeValue,
 } from '@/entities/weather'
 import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
-
-const MAX_LUX = 2000
 
 export function LightGauge() {
   const { illumination: indoorIllumination, date } = useWeatherStore(
@@ -27,12 +26,12 @@ export function LightGauge() {
     <WeatherCard id={ANCHOR_ILLUMINATION} colors={['#facc15', '#f59e0b']}>
       <WeatherCardHeader
         title={'Уровень освещения'}
-        mode={'home'}
-        availableModes={['home']}
+        mode={initMode}
+        availableModes={[initMode]}
         onMode={() => {}}
       />
 
-      <WeatherCardFooter>
+      <WeatherCardFooter date={date}>
         <div className="flex flex-col gap-2 items-center w-full">
           <div className="relative w-[360px] h-[192px]">
             <svg viewBox="0 0 360 192">
@@ -111,8 +110,6 @@ export function LightGauge() {
           </div>
         </div>
       </WeatherCardFooter>
-
-      <UpdateInfo date={date} />
     </WeatherCard>
   )
 }

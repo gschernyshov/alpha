@@ -1,10 +1,14 @@
+import type { LucideIcon } from 'lucide-react'
+
+export type WeatherMode = {
+  Icon: LucideIcon
+  label: string
+}
+
 export type Temperature = number | null
 export type Humidity = number | null
 export type Illumination = number | null
 export type WeatherDate = string | null
-
-export type UnitTemp = 'C' | 'F' | 'K'
-export type Mode = 'home' | 'city' | 'sypha' | 'newton' | 'hercules'
 
 export type WeatherIndoor = {
   temperature: Temperature

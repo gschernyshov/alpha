@@ -10,6 +10,8 @@ import {
   WeatherCardContent,
   WeatherCardFooter,
   useWeatherStore,
+  initMode,
+  availableModes,
   safeValue,
 } from '@/entities/weather'
 
@@ -24,7 +26,7 @@ export const HumidityBar = () => {
   )
 
   const { humidity, date } = useMemo(() => {
-    if (mode === 'home') {
+    if (mode.label === initMode.label) {
       return { humidity: safeValue(indoorHumidity), date: indoorDate }
     } else {
       return { humidity: safeValue(outdoorHumidity), date: outdoorTime }
@@ -36,14 +38,14 @@ export const HumidityBar = () => {
       <WeatherCardHeader
         title={'Влажность'}
         mode={mode}
-        availableModes={['home', 'city']}
+        availableModes={availableModes}
         onMode={setMode}
       />
 
       <WeatherCardContent
         value={humidity}
         unit={'%'}
-        otherValues={mode === 'home' ? null : { humidity }}
+        otherValues={mode.label === initMode.label ? null : { humidity }}
       />
 
       <WeatherCardFooter date={date}>

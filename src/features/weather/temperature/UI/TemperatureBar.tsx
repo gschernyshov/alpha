@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useModeStore } from '../model/modeStore'
+import type { UnitTemp } from '../model/types'
 import { moods } from '../config/mood'
 import { ANCHOR_TEMPERATURE } from '../config/anchor'
-import { useModeStore } from '../model/modeStore'
 import {
   WeatherCard,
   WeatherCardHeader,
@@ -11,7 +12,9 @@ import {
   WeatherCardFooter,
   convertTemp,
   useWeatherStore,
+  initMode,
   safeValue,
+  availableModes,
 } from '@/entities/weather'
 
 export const TemperatureBar = () => {
@@ -28,10 +31,10 @@ export const TemperatureBar = () => {
     windSpeed,
   } = useWeatherStore(state => state.outdoor)
 
-  const [unit, setUnit] = useState<'C' | 'F' | 'K'>('C')
+  const [unit, setUnit] = useState<UnitTemp>('C')
 
   const { temperature, date } = useMemo(() => {
-    if (mode === 'home') {
+    if (mode.label === initMode.label) {
       return { temperature: indoorTemp ?? 0, date: indoorDate }
     } else {
       return { temperature: outdoorTemp ?? 0, date: outdoorTime }
@@ -98,7 +101,7 @@ export const TemperatureBar = () => {
         <WeatherCardHeader
           title={'Температура'}
           mode={mode}
-          availableModes={['home', 'city']}
+          availableModes={availableModes}
           onMode={setMode}
         />
 
@@ -107,7 +110,9 @@ export const TemperatureBar = () => {
           unit={unit === 'C' ? '°C' : unit === 'F' ? '°F' : 'K'}
           onUnit={toggleUnit}
           otherValues={
-            mode === 'home' ? null : { feelsLike, pressure, windSpeed }
+            mode.label === initMode.label
+              ? null
+              : { feelsLike, pressure, windSpeed }
           }
         />
 

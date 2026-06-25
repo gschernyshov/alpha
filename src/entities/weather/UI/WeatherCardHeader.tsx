@@ -1,11 +1,11 @@
-import type { Mode } from '../model/types'
-import { ToggleMode } from '@/entities/weather/UI/ToggleMode'
+import type { WeatherMode } from '../model/types'
+import { ToggleMode } from '@/src/shared/UI/ToggleMode'
 
 interface WeatherCardHeaderProps {
   title: string
-  mode?: Mode
-  availableModes: Mode[]
-  onMode?: (mode: Mode) => void
+  mode?: WeatherMode
+  availableModes?: WeatherMode[]
+  onMode?: (mode: WeatherMode) => void
 }
 
 export const WeatherCardHeader = ({
@@ -25,7 +25,7 @@ export const WeatherCardHeader = ({
         {title}
       </p>
 
-      {mode && onMode && (
+      {mode && availableModes && onMode && (
         <ToggleMode
           mode={mode}
           availableModes={availableModes}
