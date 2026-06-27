@@ -1,5 +1,3 @@
-'use client'
-
 import {
   TemperatureBar,
   HumidityBar,
@@ -15,6 +13,7 @@ export const WeatherFeatures = () => {
         <HumidityBar />
         <LightGauge />
       </div>
+
       <Watering />
     </div>
   )

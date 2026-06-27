@@ -1,19 +1,28 @@
+'use client'
+
 import { useEffect } from 'react'
 import axios from 'axios'
 import {
-  type WeatherApiResponse,
   useWeatherStore,
   fetchWeather,
+  type WeatherApiResponse,
 } from '@/entities/weather'
+import {
+  useSoilMoisturePlantsStore,
+  fetchSoilMoisture,
+  type SoilMoistureApiResponse,
+} from '@/features/weather'
 
 interface UseWeatherPollingProps {
   weather?: WeatherApiResponse
+  soilMoisture?: SoilMoistureApiResponse
   intervalMs?: number
   enabled?: boolean
 }
 
 export const useWeatherPolling = ({
   weather,
+  soilMoisture,
   intervalMs = 10000,
   enabled = true,
 }: UseWeatherPollingProps) => {
@@ -30,9 +39,15 @@ export const useWeatherPolling = ({
       abortController = new AbortController()
 
       try {
-        const data = await fetchWeather(abortController.signal)
+        const [weatherResult, soilMoistureResult] = await Promise.all([
+          fetchWeather(abortController.signal),
+          fetchSoilMoisture(abortController.signal),
+        ])
 
-        useWeatherStore.getState().setWeather(data)
+        useWeatherStore.getState().setWeather(weatherResult)
+        useSoilMoisturePlantsStore
+          .getState()
+          .setSoilMoisture(soilMoistureResult)
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Weather request cancelled')
@@ -44,7 +59,13 @@ export const useWeatherPolling = ({
 
     if (weather) {
       useWeatherStore.getState().setWeather(weather)
-    } else {
+    }
+
+    if (soilMoisture) {
+      useSoilMoisturePlantsStore.getState().setSoilMoisture(soilMoisture)
+    }
+
+    if (!weather || !soilMoisture) {
       fetchData()
     }
 
@@ -54,5 +75,5 @@ export const useWeatherPolling = ({
       if (intervalId) clearInterval(intervalId)
       if (abortController) abortController.abort()
     }
-  }, [weather, intervalMs, enabled])
+  }, [weather, soilMoisture, intervalMs, enabled])
 }
