@@ -38,10 +38,7 @@ export const weather = async (): Promise<NextResponse> => {
         orderBy: { createdAt: 'desc' },
       })
     } catch (error) {
-      console.warn(
-        'Ошибка получения данных метеостанции из БД (ORM Prisma): ',
-        error
-      )
+      console.warn('Ошибка получения данных метеостанции из БД: ', error)
     }
 
     let outdoorData = null
@@ -52,10 +49,7 @@ export const weather = async (): Promise<NextResponse> => {
         })
       ).data
     } catch (error) {
-      console.warn(
-        'Ошибка получения данных погоды из OpenWeather (OpenWeather): ',
-        error
-      )
+      console.warn('Ошибка получения данных погоды из OpenWeather : ', error)
     }
 
     if (!latestIndoor && !outdoorData) {
@@ -80,7 +74,9 @@ export const weather = async (): Promise<NextResponse> => {
         humidity: outdoorData?.main?.humidity ?? null,
         pressure: outdoorData?.main?.pressure ?? null,
         windSpeed: outdoorData?.wind?.speed ?? null,
-        time: outdoorData?.dt ? DateTime.fromISO(outdoorData.dt).toISO() : null,
+        time: outdoorData?.dt
+          ? DateTime.fromSeconds(outdoorData.dt).toISO()
+          : null,
       },
     }
 

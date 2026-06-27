@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { DateTime } from 'luxon'
 import { prisma } from '@/shared/db/prisma'
-import { WaterStatus } from '@/shared/db/generated/prisma/client'
+import type { WaterStatus } from '@/shared/db/generated/prisma/client'
 
 type PlantsResult = {
   title: string
