@@ -11,7 +11,7 @@ import { getMode, getAvailableModes } from '../lib/getMode'
 import { getWateringInfo } from '../lib/getWateringInfo'
 import { getPluralizeDays } from '../lib/getPluralizeDays'
 import { getHumidityColor } from '../lib/getHumidityColor'
-import { UpdateInfo, WeatherCard, WeatherCardHeader } from '@/entities/weather'
+import { WeatherCard, WeatherCardHeader } from '@/entities/weather'
 import { Button } from '@/shared/UI/shadcn/button'
 import {
   Tabs,
@@ -99,17 +99,17 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 h-full">
-        <div className=" relative min-w-[400px] md:pt-10">
+        <div className=" relative min-w-full md:min-w-[400px] min-h-[200px] md:pt-10">
           <Image
             alt="Изображение растения"
             src={`/plants/${plant.img}`}
-            height={400}
+            height={2}
             width={400}
             sizes="(max-width: 768px) 300px, 400px"
             className="w-full h-auto object-cover max-w-[400px] mx-auto mb-4"
           />
 
-          <div className="absolute bottom-9 right-20 md:left-20 md:right-auto flex flex-col gap-1.5 rounded-lg bg-black/30 backdrop-blur-sm px-2 py-1.5 text-white shadow-md">
+          <div className="absolute bottom-4 md:bottom-9 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 rounded-lg bg-black/30 backdrop-blur-sm px-2 py-1.5 text-white shadow-md">
             <span className="text-[10px] font-medium uppercase tracking-wide opacity-80">
               Влажность почвы
             </span>
@@ -126,8 +126,6 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
               </span>
             </div>
           </div>
-
-          <UpdateInfo date={soilMoisturePlant?.date ?? null} />
         </div>
 
         <div className="flex flex-col justify-between items-start gap-8 h-full">
@@ -182,7 +180,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
 
           <div className="flex flex-row items-center justify-between md:justify-start gap-4 md:gap-15 w-full">
             <div
-              className={`flex flex-col gap-2 ${diffWatering === null ? 'text-black' : diffWatering >= 0 ? 'text-black' : 'text-red-400'}`}
+              className={`flex flex-col gap-4 md:gap-2 ${diffWatering === null ? 'text-black' : diffWatering >= 0 ? 'text-black' : 'text-red-400'}`}
             >
               <span className="text-md font-semibold">
                 {diffWatering === null
@@ -192,7 +190,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                     : 'Полив пропущен'}
               </span>
 
-              <div className="flex items-baseline gap-2 md:gap-4">
+              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4">
                 <span className="text-4xl font-bold">
                   {toWatering ?? '? дня'}
                 </span>

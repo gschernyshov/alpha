@@ -96,7 +96,7 @@ export function Globe({
   return (
     <div
       className={cn(
-        'absolute inset-0 mx-auto aspect-square w-full max-w-150',
+        'absolute inset-0 mx-auto aspect-square w-full max-w-150 mt-[45px] md:mt-0',
         className
       )}
     >
