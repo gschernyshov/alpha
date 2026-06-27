@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/shared/db/prisma'
 import { DateTime } from 'luxon'
+import { prisma } from '@/shared/db/prisma'
 
 type SoilMoistureResult = {
   title: string
   value: number | null
-  measuredAt: string | null
+  date: string | null
 }[]
 
 export const soilMoisture = async (): Promise<NextResponse> => {
@@ -26,18 +26,11 @@ export const soilMoisture = async (): Promise<NextResponse> => {
       },
     })
 
-    if (plants.length === 0) {
-      return NextResponse.json(
-        { error: 'Данные о влажности почвы не найдены' },
-        { status: 404 }
-      )
-    }
-
     const result: SoilMoistureResult = plants.map(
       ({ title, soilMoistures }) => ({
         title,
         value: soilMoistures[0]?.value ?? null,
-        measuredAt: soilMoistures[0]?.measuredAt
+        date: soilMoistures[0]?.measuredAt
           ? DateTime.fromJSDate(soilMoistures[0].measuredAt).toISO()
           : null,
       })
