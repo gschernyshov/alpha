@@ -20,15 +20,18 @@ const weatherCreate = async () => {
 }
 
 const plantCreate = async () => {
-  const plant = await prisma.plant.create({
-    data: {
+  const plant = await prisma.plant.upsert({
+    where: { title: 'Сифа' },
+    create: {
       title: 'Сифа',
     },
+    update: {},
   })
 
   await Promise.all([
-    prisma.plantProfile.create({
-      data: {
+    prisma.plantProfile.upsert({
+      where: { plantId: plant.id },
+      create: {
         plantId: plant.id,
         name: 'Замиокулькас',
         latinName: 'Zamioculcas zamiifolia',
@@ -41,6 +44,7 @@ const plantCreate = async () => {
           'Поливать умеренно, давая почве высыхать между поливами. Зимой — редко.',
         wateringIntervalDays: 7,
       },
+      update: {},
     }),
     prisma.soilMoisture.create({
       data: {
