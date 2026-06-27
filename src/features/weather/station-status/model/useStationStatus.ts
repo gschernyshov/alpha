@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { stationClient } from '@/shared/api'
+import { fetchSatusStation } from '../api/statusStation'
 
 interface UseStationStatusProps {
   intervalMs?: number
@@ -29,7 +29,7 @@ export const useStationStatus = ({
 
       setStatus('loading')
       try {
-        await stationClient.get('/status')
+        await fetchSatusStation()
 
         setStatus('online')
       } catch (error) {
