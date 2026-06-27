@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { DateTime } from 'luxon'
 import { prisma } from '@/shared/db/prisma'
+import { WaterStatus } from '@/shared/db/generated/prisma/client'
 
 type PlantsResult = {
   title: string
@@ -12,6 +13,7 @@ type PlantsResult = {
   temperatureRequirements: string | null
   wateringRequirements: string | null
   wateringIntervalDays: number | null
+  waterStatus: WaterStatus | null
   lastWaterDate: string | null
 }[]
 
@@ -34,6 +36,7 @@ export const plants = async (): Promise<NextResponse> => {
         },
         waterLogs: {
           select: {
+            status: true,
             waterAt: true,
           },
           orderBy: {
@@ -54,6 +57,7 @@ export const plants = async (): Promise<NextResponse> => {
       temperatureRequirements: plant.profile?.temperatureRequirements ?? null,
       wateringRequirements: plant.profile?.wateringRequirements ?? null,
       wateringIntervalDays: plant.profile?.wateringIntervalDays ?? null,
+      waterStatus: plant.waterLogs[0]?.status ?? null,
       lastWaterDate: plant.waterLogs[0]?.waterAt
         ? DateTime.fromJSDate(plant.waterLogs[0]?.waterAt).toISO()
         : null,
