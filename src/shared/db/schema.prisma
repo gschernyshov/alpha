@@ -12,6 +12,13 @@ datasource db {
   provider = "postgresql"
 }
 
+enum WaterStatus {
+  PENDING      // Ожидание завершения полива
+  SUCCESS      // Полив успешно завершён
+  FAILED       // Ошибка при поливе
+  MANUAL       // Полив выполнен вручную
+}
+
 model Weather {
   id             Int        @id @default(autoincrement())
 
@@ -80,7 +87,8 @@ model WaterLog {
   id               Int        @id @default(autoincrement())
 
   plantId          Int
-  waterAt          DateTime  
+  status           WaterStatus?
+  waterAt          DateTime?
 
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
