@@ -50,7 +50,7 @@ export const DataStatus = ({ className = '' }: DataStatusProps) => {
 
   return (
     <div
-      className={`flex flex-col gap-3 px-3 py-1.5 ${styles.bg} backdrop-blur border ${styles.border} rounded-md z-100 cursor-pointer ${className}`}
+      className={`flex flex-col gap-3 px-3 py-1.5 ${styles.bg} backdrop-blur border ${styles.border} rounded-md select-none z-100 cursor-pointer ${className}`}
       onClick={() => setIsShowDate(prev => !prev)}
     >
       <div className="flex items-center gap-2">

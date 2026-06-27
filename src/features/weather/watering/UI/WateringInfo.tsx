@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useMemo } from 'react'
+import { useState, useMemo } from 'react'
+import { DateTime } from 'luxon'
 import { Droplet } from 'lucide-react'
 import { useModeStore } from '../model/modeStore'
 import { useSoilMoisturePlantsStore } from '../model/soilMoisturePlantsStore'
@@ -29,6 +30,7 @@ interface WateringInfoProps {
 export const WateringInfo = ({ plants }: WateringInfoProps) => {
   const { mode, setMode } = useModeStore()
   const { soilMoisturePlants } = useSoilMoisturePlantsStore()
+  const [isShowLastWaterDate, setIsShowLastWaterDate] = useState(false)
 
   const plantFirst: Plant | undefined = plants[0]
 
@@ -109,10 +111,16 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
             className="w-full h-auto object-cover max-w-[400px] mx-auto mb-4"
           />
 
-          <div className="absolute bottom-4 md:bottom-9 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 rounded-lg bg-black/30 backdrop-blur-sm px-2 py-1.5 text-white shadow-md">
+          <div
+            className="absolute bottom-4 md:bottom-9 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 rounded-lg bg-black/30 backdrop-blur-sm px-2 py-1.5 text-white shadow-md select-none cursor-pointer"
+            onClick={() =>
+              plant.lastWaterDate && setIsShowLastWaterDate(prev => !prev)
+            }
+          >
             <span className="text-[10px] font-medium uppercase tracking-wide opacity-80">
               Влажность почвы
             </span>
+
             <div className="flex items-center gap-1.5">
               <Droplet
                 className="h-4 w-4 shrink-0"
@@ -125,6 +133,16 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 {soilMoisturePlant?.value ?? 0}%
               </span>
             </div>
+
+            {plant.lastWaterDate && isShowLastWaterDate && (
+              <div className="text-xs tracking-wide opacity-80">
+                Обновлено{' '}
+                {DateTime.fromISO(plant.lastWaterDate).toRelative({
+                  base: DateTime.now(),
+                  locale: 'ru',
+                })}
+              </div>
+            )}
           </div>
         </div>
 
