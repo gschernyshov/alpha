@@ -1,1 +1,1 @@
-export { sensor as GET } from '@/app/api-routes/sensor'
+export { sensor as POST } from '@/app/api-routes/sensor'

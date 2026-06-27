@@ -1,14 +1,7 @@
-import { DateTime } from 'luxon'
 import { type NextRequest, NextResponse } from 'next/server'
+import { DateTime } from 'luxon'
 import { prisma } from '@/shared/db/prisma'
 import { sendTelegramMessage } from '@/shared/lib/telegram'
-
-type Plant = {
-  title: string
-  soilMoisture: number
-}
-
-type Plants = Plant[]
 
 const API_KEY = process.env.API_KEY
 
@@ -19,49 +12,37 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const searchParams = request.nextUrl.searchParams
+    const body = await request.json()
 
-    const tempParam = searchParams.get('temp')
-    const humParam = searchParams.get('hum')
-    const illumParam = searchParams.get('illum')
-    const plantsParam = searchParams.get('plants')
-    const measuredParam = searchParams.get('measured')
+    const { temperature, humidity, illumination, plants, measured } = body
+
+    if (!temperature || !humidity || !illumination || !plants || !measured) {
+      return NextResponse.json(
+        {
+          error:
+            'Missing required fields: temperature, humidity, illumination, plants, or measured',
+        },
+        { status: 400 }
+      )
+    }
 
     if (
-      !tempParam ||
-      !humParam ||
-      !illumParam ||
-      !plantsParam ||
-      !measuredParam
+      !Number.isFinite(temperature) ||
+      !Number.isFinite(humidity) ||
+      !Number.isFinite(illumination)
     ) {
       return NextResponse.json(
         {
           error:
-            'Missing required parameters: temp, hum, illum, plants, measured',
+            'Invalid numeric values for temperature, humidity, or illumination',
         },
         { status: 400 }
       )
     }
 
-    const temperature = parseFloat(tempParam)
-    const humidity = parseFloat(humParam)
-    const illumination = parseFloat(illumParam)
-
-    if (isNaN(temperature) || isNaN(humidity) || isNaN(illumination)) {
+    if (!Array.isArray(plants)) {
       return NextResponse.json(
-        {
-          error: 'Invalid numeric values for temp, hum, or illum',
-        },
-        { status: 400 }
-      )
-    }
-
-    let plants: Plants
-    try {
-      plants = JSON.parse(plantsParam)
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid JSON in plants' },
+        { error: 'An array is required for plants' },
         { status: 400 }
       )
     }
@@ -69,8 +50,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
     for (const plant of plants) {
       if (
         typeof plant.title !== 'string' ||
-        typeof plant.soilMoisture !== 'number' ||
-        Number.isNaN(plant.soilMoisture)
+        !Number.isFinite(plant.soilMoisture)
       ) {
         return NextResponse.json(
           {
@@ -81,16 +61,16 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       }
     }
 
-    const measured = DateTime.fromISO(measuredParam)
+    const measuredDate = DateTime.fromISO(measured)
 
-    if (!measured.isValid) {
+    if (!measuredDate.isValid) {
       return NextResponse.json(
         { error: 'Invalid date format for measured' },
         { status: 400 }
       )
     }
 
-    const measuredISO = measured.toISO()
+    const measuredISO = measuredDate.toISO()
 
     try {
       await prisma.weather.create({
@@ -102,10 +82,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
         },
       })
     } catch (error) {
-      console.warn(
-        'Ошибка добавления данных метеостанции в БД (Prisma ORM): ',
-        error
-      )
+      console.warn('Ошибка добавления данных метеостанции в БД: ', error)
 
       throw error
     }
@@ -153,10 +130,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       console.warn('Ошибка отправки сообщения в Telegram: ', error)
     }
 
-    return NextResponse.json(
-      { message: 'Data saved successfully' },
-      { status: 200 }
-    )
+    return NextResponse.json(null, { status: 204 })
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
