@@ -69,7 +69,7 @@ export const WeatherCardContent = ({
         </div>
 
         {otherValues && (
-          <div className="flex gap-10">
+          <div className="flex gap-5 md:gap-10">
             {otherValues.pressure != null && (
               <div className="flex flex-col items-center gap-1">
                 <CloudRain className="w-4 h-4 mb-0.5 text-foreground" />

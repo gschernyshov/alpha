@@ -134,10 +134,10 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
               </span>
             </div>
 
-            {plant.lastWaterDate && isShowLastWaterDate && (
+            {soilMoisturePlant?.date && isShowLastWaterDate && (
               <div className="text-xs tracking-wide opacity-80">
                 Обновлено{' '}
-                {DateTime.fromISO(plant.lastWaterDate).toRelative({
+                {DateTime.fromISO(soilMoisturePlant?.date).toRelative({
                   base: DateTime.now(),
                   locale: 'ru',
                 })}
@@ -166,7 +166,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
             defaultValue="description"
             className="flex flex-col gap-4 w-full"
           >
-            <TabsList className="flex justify-start flex-wrap gap-1.5 h-auto! p-0 md:p-1 bg-white/0 md:bg-emerald-50 dark:bg-slate-800 rounded-lg">
+            <TabsList className="flex justify-start flex-wrap gap-1.5 h-auto! p-0 md:p-1 bg-white/0 md:bg-emerald-50 md:dark:bg-slate-800 rounded-lg">
               {plantSections.map(({ value, label }) => (
                 <TabsTrigger
                   key={value}
@@ -176,6 +176,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                     flex-[0_0_auto]
                     px-3 py-1.5 rounded-md text-sm font-medium
                     bg-emerald-100 hover:bg-emerald-200
+                    dark:bg-slate-700 dark:hover:bg-slate-600
                     text-emerald-700 hover:text-emerald-800
                     data-[state=active]:bg-emerald-600 data-[state=active]:hover:bg-emerald-600
                     data-[state=active]:text-white data-[state=active]:hover:text-white
@@ -198,7 +199,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
 
           <div className="flex flex-row items-center justify-between md:justify-start gap-4 md:gap-15 w-full">
             <div
-              className={`flex flex-col gap-4 md:gap-2 ${diffWatering === null ? 'text-black' : diffWatering >= 0 ? 'text-black' : 'text-red-400'}`}
+              className={`flex flex-col items-start gap-4 md:gap-2 ${diffWatering === null ? 'text-black dark:text-white/80' : diffWatering >= 0 ? 'text-black dark:text-white/80' : 'text-red-400'}`}
             >
               <span className="text-md font-semibold">
                 {diffWatering === null
@@ -208,7 +209,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                     : 'Полив пропущен'}
               </span>
 
-              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4">
+              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4 ">
                 <span className="text-4xl font-bold">
                   {toWatering ?? '? дня'}
                 </span>
@@ -220,7 +221,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 )}
               </div>
 
-              <div className="mt-1 text-xs md:text-sm text-muted-foreground">
+              <div className="mt-1 px-3 py-2 md:px-0 md:py-0 bg-emerald-600/20 md:bg-white/0 rounded-md text-xs md:text-sm text-gray-100">
                 <span className="font-medium">
                   полив каждые {getPluralizeDays(plant.wateringIntervalDays)}
                 </span>
@@ -233,7 +234,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 diffWatering !== null && diffWatering <= 2 ? false : true
               }
               aria-label="Полить растение"
-              className="h-27 w-14 md:w-27 shrink-0 rounded-full bg-emerald-600 hover:bg-emerald-700 shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
+              className="w-18 md:w-27 h-38 md:h-27 shrink-0 rounded-full bg-emerald-600 hover:bg-emerald-700 shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
             >
               <Droplet className="h-8 w-8" />
             </Button>

@@ -7,7 +7,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const hour = DateTime.local().hour
 
-    const isNight = hour >= 18 || hour < 7
+    const isNight = hour >= 12 || hour < 7
 
     if (isNight) {
       document.documentElement.classList.add('dark')

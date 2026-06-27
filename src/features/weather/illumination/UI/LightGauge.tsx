@@ -11,12 +11,15 @@ import {
   initMode,
   safeValue,
 } from '@/entities/weather'
+import { useIsMobile } from '@/shared/hooks/useIsMobile'
 import { NumberTicker } from '@/shared/UI/shadcn/number-ticker'
 
 export function LightGauge() {
   const { illumination: indoorIllumination, date } = useWeatherStore(
     state => state.indoor
   )
+
+  const isMobile = useIsMobile()
 
   const illumination = safeValue(
     indoorIllumination && (indoorIllumination / MAX_LUX) * 100
@@ -33,7 +36,13 @@ export function LightGauge() {
 
       <WeatherCardFooter date={date}>
         <div className="flex flex-col gap-2 items-center w-full">
-          <div className="relative w-[360px] h-[192px]">
+          <div
+            className="relative"
+            style={{
+              width: isMobile ? '300px' : '360px',
+              height: isMobile ? '162px' : '192px',
+            }}
+          >
             <svg viewBox="0 0 360 192">
               <defs>
                 <linearGradient
@@ -94,7 +103,10 @@ export function LightGauge() {
             </div>
           </div>
 
-          <div className="flex justify-between gap-4 min-w-[366px] text-muted-foreground">
+          <div
+            className="flex justify-between gap-4 text-muted-foreground"
+            style={{ minWidth: isMobile ? '100%' : '366px' }}
+          >
             <div className="flex items-center gap-2">
               <CloudMoon className="w-4 h-4" />
               <p className="text-sm tracking-wide leading-none select-none">
