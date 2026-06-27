@@ -1,5 +1,5 @@
 import type { WeatherMode } from '../model/types'
-import { ToggleMode } from '@/src/shared/UI/ToggleMode'
+import { ToggleMode } from '@/shared/UI/ToggleMode'
 
 interface WeatherCardHeaderProps {
   title: string

@@ -1,3 +1,5 @@
+'use client'
+
 import { Cpu } from 'lucide-react'
 import { useStationStatus } from '../model/useStationStatus'
 import { statusColors } from '../config/statusColors'
@@ -19,7 +21,7 @@ export const StationStatus = ({ className = '' }: StationStatusProps) => {
 
   return (
     <div
-      className={`p-4 ${styles.bg} backdrop-blur border ${styles.border} rounded-2xl animate-pulse ${styles.pulseColor} ${className}`}
+      className={`p-4 ${styles.bg} backdrop-blur border ${styles.border} rounded-2xl animate-pulse ${className}`}
     >
       <div className={`flex items-center gap-2 text-md ${styles.text}`}>
         <Cpu size={16} />
