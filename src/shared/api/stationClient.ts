@@ -1,12 +1,14 @@
 import axios, { type AxiosInstance } from 'axios'
 
-const NEXT_PUBLIC_API_STATION_URL = process.env.NEXT_PUBLIC_API_STATION_URL
+const STATION_API_URL = process.env.STATION_API_URL
+const STATION_API_KEY = process.env.STATION_API_KEY
 
 export const stationClient: AxiosInstance = axios.create({
-  baseURL: NEXT_PUBLIC_API_STATION_URL,
+  baseURL: STATION_API_URL,
   timeout: 2000,
   headers: {
     'Content-Type': 'application/json',
+    'X-API-Key': STATION_API_KEY,
   },
 })
 
