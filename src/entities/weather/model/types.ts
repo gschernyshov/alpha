@@ -23,7 +23,7 @@ export type WeatherOutdoor = {
   humidity: number | null
   pressure: number | null
   windSpeed: number | null
-  time: string | null
+  time: WeatherDate
 }
 
 export type WeatherApiResponse = {
