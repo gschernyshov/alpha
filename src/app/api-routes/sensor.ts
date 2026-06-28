@@ -70,7 +70,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       )
     }
 
-    const measuredISO = measuredDate.toISO()
+    const measuredISO = measuredDate.toUTC().toISO()
 
     try {
       await prisma.weather.create({

@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { DateTime } from 'luxon'
 import { getStatus } from '../lib/getStatus'
 import { statusColors } from '../config/statusColors'
-import { useWeatherStore } from '@/entities/weather'
+import { useWeatherStore, timeAgo } from '@/entities/weather'
 
 interface DataStatusProps {
   className?: string
@@ -19,18 +18,8 @@ export const DataStatus = ({ className = '' }: DataStatusProps) => {
 
   const date = useMemo(
     () => ({
-      indoor: indoorDate
-        ? DateTime.fromISO(indoorDate).toRelative({
-            base: DateTime.now(),
-            locale: 'ru',
-          })
-        : 'информация отсутствует',
-      outdoor: outdoorTime
-        ? DateTime.fromISO(outdoorTime).toRelative({
-            base: DateTime.now(),
-            locale: 'ru',
-          })
-        : 'информация отсутствует',
+      indoor: timeAgo(indoorDate) ?? 'информация отсутствует',
+      outdoor: timeAgo(outdoorTime) ?? 'информация отсутствует',
     }),
     [indoorDate, outdoorTime]
   )
@@ -54,7 +43,6 @@ export const DataStatus = ({ className = '' }: DataStatusProps) => {
       onClick={() => setIsShowDate(prev => !prev)}
     >
       <div className="flex items-center gap-2">
-        {' '}
         <span
           className={`w-2 h-2 rounded-full ${styles.pulseColor} animate-pulse`}
         />

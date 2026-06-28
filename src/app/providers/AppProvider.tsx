@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react'
+import { Settings } from 'luxon'
 import { geistSans, geistMono } from '@/shared/lib/fonts'
 import '../globals.css'
+
+Settings.defaultLocale = 'ru'
 
 interface AppProviderProps {
   children: ReactNode
