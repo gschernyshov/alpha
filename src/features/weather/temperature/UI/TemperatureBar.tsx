@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useModeStore } from '../model/modeStore'
 import type { UnitTemp } from '../model/types'
+import { convertTemp } from '../lib/convertTemp'
 import { moods } from '../config/mood'
 import { ANCHOR_TEMPERATURE } from '../config/anchor'
 import {
@@ -10,11 +11,10 @@ import {
   WeatherCardHeader,
   WeatherCardContent,
   WeatherCardFooter,
-  convertTemp,
   useWeatherStore,
   initMode,
-  safeValue,
   availableModes,
+  safeValue,
 } from '@/entities/weather'
 
 export const TemperatureBar = () => {

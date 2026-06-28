@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon'
 import { Plant } from '../model/types'
+import { dateTime } from '@/entities/weather'
 
 export const getWateringInfo = (
   lastWaterDate: Plant['lastWaterDate'],
@@ -13,17 +13,15 @@ export const getWateringInfo = (
     }
   }
 
-  const now = DateTime.now()
+  const { targetDate: lastWatering, now } = dateTime(lastWaterDate)
 
-  const lastWatering = DateTime.fromISO(lastWaterDate)
   const nextWatering = lastWatering.plus({ days: wateringIntervalDays })
-
-  const diffWatering = Math.round(nextWatering.diff(now).as('days') * 10) / 10
 
   const toWatering = nextWatering.toRelative({
     base: now,
-    locale: 'ru',
   })
+
+  const diffWatering = Math.round(nextWatering.diff(now).as('days') * 10) / 10
 
   return {
     nextWatering: nextWatering.toLocaleString({

@@ -1,7 +1,7 @@
 'use client'
 
 import { useWeatherPolling } from '../model/useWeatherPolling'
-import { SoilMoistureApiResponse } from '@/features/weather'
+import type { SoilMoistureApiResponse } from '@/features/weather'
 import type { WeatherApiResponse } from '@/entities/weather'
 
 interface WeatherMonitoringProps {

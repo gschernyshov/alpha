@@ -2,17 +2,22 @@
 
 import Image from 'next/image'
 import { useState, useMemo } from 'react'
-import { DateTime } from 'luxon'
 import { Droplet } from 'lucide-react'
 import { useModeStore } from '../model/modeStore'
 import { useSoilMoisturePlantsStore } from '../model/soilMoisturePlantsStore'
 import type { Plant, Plants } from '../model/types'
-import { ANCHOR_WATERING } from '../config/anchor'
 import { getMode, getAvailableModes } from '../lib/getMode'
 import { getWateringInfo } from '../lib/getWateringInfo'
 import { getPluralizeDays } from '../lib/getPluralizeDays'
 import { getHumidityColor } from '../lib/getHumidityColor'
-import { WeatherCard, WeatherCardHeader } from '@/entities/weather'
+import { ANCHOR_WATERING } from '../config/anchor'
+import {
+  WeatherCard,
+  WeatherCardHeader,
+  safeValue,
+  timeAgo,
+} from '@/entities/weather'
+import { useIsMobile } from '@/shared/hooks/useIsMobile'
 import { Button } from '@/shared/UI/shadcn/button'
 import {
   Tabs,
@@ -29,8 +34,12 @@ interface WateringInfoProps {
 
 export const WateringInfo = ({ plants }: WateringInfoProps) => {
   const { mode, setMode } = useModeStore()
-  const { soilMoisturePlants } = useSoilMoisturePlantsStore()
+  const soilMoisturePlants = useSoilMoisturePlantsStore(
+    state => state.soilMoisturePlants
+  )
   const [isShowLastWaterDate, setIsShowLastWaterDate] = useState(false)
+
+  const isMobile = useIsMobile()
 
   const plantFirst: Plant | undefined = plants[0]
 
@@ -43,7 +52,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
       return plantsMap.get(mode.label)!
     }
     return plantFirst
-  }, [mode, plantFirst, plantsMap])
+  }, [mode, plantsMap, plantFirst])
 
   const plantSections = useMemo(() => {
     return (
@@ -101,18 +110,16 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
       />
 
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 h-full">
-        <div className=" relative min-w-full md:min-w-[400px] min-h-[200px] md:pt-10">
+        <div className="relative min-w-full md:min-w-[400px] min-h-[300px] md:pt-10">
           <Image
             alt="Изображение растения"
             src={`/plants/${plant.img}`}
-            height={2}
-            width={400}
-            sizes="(max-width: 768px) 300px, 400px"
-            className="w-full h-auto object-cover max-w-[400px] mx-auto mb-4"
+            width={isMobile ? 300 : 400}
+            height={isMobile ? 300 : 400}
           />
 
           <div
-            className="absolute bottom-4 md:bottom-9 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 rounded-lg bg-black/30 backdrop-blur-sm px-2 py-1.5 text-white shadow-md select-none cursor-pointer"
+            className="absolute bottom-0 md:bottom-3 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 px-2 py-1.5 bg-black/30 backdrop-blur-sm rounded-lg shadow-md text-white select-none cursor-pointer"
             onClick={() =>
               plant.lastWaterDate && setIsShowLastWaterDate(prev => !prev)
             }
@@ -123,24 +130,20 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
 
             <div className="flex items-center gap-1.5">
               <Droplet
-                className="h-4 w-4 shrink-0"
+                className="w-4 h-4 shrink-0"
                 style={{
                   color: getHumidityColor(soilMoisturePlant?.value ?? null),
                   fill: 'currentColor',
                 }}
               />
               <span className="font-semibold text-sm">
-                {soilMoisturePlant?.value ?? 0}%
+                {safeValue(soilMoisturePlant?.value ?? null)}%
               </span>
             </div>
 
             {soilMoisturePlant?.date && isShowLastWaterDate && (
               <div className="text-xs tracking-wide opacity-80">
-                Обновлено{' '}
-                {DateTime.fromISO(soilMoisturePlant?.date).toRelative({
-                  base: DateTime.now(),
-                  locale: 'ru',
-                })}
+                обновлено {timeAgo(soilMoisturePlant?.date ?? null)}
               </div>
             )}
           </div>
@@ -171,8 +174,8 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 <TabsTrigger
                   key={value}
                   value={value}
-                  defaultValue={'description'}
-                  className={`
+                  defaultValue="description"
+                  className="
                     flex-[0_0_auto]
                     px-3 py-1.5 rounded-md text-sm font-medium
                     bg-emerald-100 hover:bg-emerald-200
@@ -181,7 +184,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                     data-[state=active]:bg-emerald-600 data-[state=active]:hover:bg-emerald-600
                     data-[state=active]:text-white data-[state=active]:hover:text-white
                     cursor-pointer
-                `}
+                  "
                 >
                   {label}
                 </TabsTrigger>
@@ -197,7 +200,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
             ))}
           </Tabs>
 
-          <div className="flex flex-row items-center justify-between md:justify-start gap-4 md:gap-15 w-full">
+          <div className="flex flex-row justify-between md:justify-start items-center gap-4 md:gap-15 w-full">
             <div
               className={`flex flex-col items-start gap-4 md:gap-2 ${diffWatering === null ? 'text-black dark:text-white/80' : diffWatering >= 0 ? 'text-black dark:text-white/80' : 'text-red-400'}`}
             >
@@ -209,7 +212,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                     : 'Полив пропущен'}
               </span>
 
-              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4 ">
+              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4">
                 <span className="text-4xl font-bold">
                   {toWatering ?? '? дня'}
                 </span>
@@ -221,7 +224,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 )}
               </div>
 
-              <div className="mt-1 px-3 py-2 md:px-0 md:py-0 bg-emerald-600/20 md:bg-white/0 rounded-md text-xs md:text-sm text-gray-100">
+              <div className="mt-1 px-3 md:px-0 py-2 md:py-0 bg-emerald-600 dark:bg-emerald-600/20 md:bg-white/0 md:dark:bg-white/0 rounded-md text-xs md:text-sm text-gray-100 md:text-muted-foreground">
                 <span className="font-medium">
                   полив каждые {getPluralizeDays(plant.wateringIntervalDays)}
                 </span>
@@ -234,7 +237,7 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
                 diffWatering !== null && diffWatering <= 2 ? false : true
               }
               aria-label="Полить растение"
-              className="w-18 md:w-27 h-38 md:h-27 shrink-0 rounded-full bg-emerald-600 hover:bg-emerald-700 shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
+              className="w-18 md:w-27 h-38 md:h-27 shrink-0 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
             >
               <Droplet className="h-8 w-8" />
             </Button>

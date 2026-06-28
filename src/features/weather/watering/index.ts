@@ -1,8 +1,7 @@
 export { Watering } from './UI/Watering'
 
-export * from './model/types'
-
 export { useSoilMoisturePlantsStore } from './model/soilMoisturePlantsStore'
+export type { SoilMoistureApiResponse } from './model/types'
 
 export { fetchSoilMoisture } from './api/fetchSoilMoisture'
 

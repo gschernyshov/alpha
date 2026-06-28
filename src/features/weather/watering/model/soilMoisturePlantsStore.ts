@@ -6,7 +6,7 @@ type SoilMoisturePlantsState = {
 }
 
 type SoilMoisturePlantsActions = {
-  setSoilMoisture: (data: SoilMoisturePlants) => void
+  setSoilMoisturePlants: (data: SoilMoisturePlants) => void
   reset: () => void
 }
 
@@ -21,7 +21,7 @@ export const useSoilMoisturePlantsStore = create<SoilMoisturePlantsStoreState>(
   set => ({
     ...initialState,
 
-    setSoilMoisture: data =>
+    setSoilMoisturePlants: data =>
       set({
         soilMoisturePlants: data,
       }),

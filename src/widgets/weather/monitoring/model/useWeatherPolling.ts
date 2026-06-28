@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect } from 'react'
 import axios from 'axios'
 import {
@@ -10,7 +8,7 @@ import {
 import {
   useSoilMoisturePlantsStore,
   fetchSoilMoisture,
-  type SoilMoistureApiResponse,
+  SoilMoistureApiResponse,
 } from '@/features/weather'
 
 interface UseWeatherPollingProps {
@@ -47,7 +45,7 @@ export const useWeatherPolling = ({
         useWeatherStore.getState().setWeather(weatherResult)
         useSoilMoisturePlantsStore
           .getState()
-          .setSoilMoisture(soilMoistureResult)
+          .setSoilMoisturePlants(soilMoistureResult)
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Weather request cancelled')
@@ -62,7 +60,7 @@ export const useWeatherPolling = ({
     }
 
     if (soilMoisture) {
-      useSoilMoisturePlantsStore.getState().setSoilMoisture(soilMoisture)
+      useSoilMoisturePlantsStore.getState().setSoilMoisturePlants(soilMoisture)
     }
 
     if (!weather || !soilMoisture) {

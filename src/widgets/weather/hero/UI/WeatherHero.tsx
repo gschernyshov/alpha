@@ -22,7 +22,7 @@ export const WeatherHero = () => {
     )
 
   return (
-    <section className="relative p-10 bg-gradient-to-b from-zinc-950 to-black rounded-3xl shadow-xl md:shadow-2xl dark:shadow-xs dark:shadow-foreground font-mono">
+    <section className="relative p-10 bg-gradient-to-b from-zinc-950 to-black rounded-3xl shadow-xl md:shadow-2xl dark:shadow-xs dark:shadow-foreground font-mono select-none">
       <ShineBorder
         duration={10}
         shineColor={[
@@ -31,8 +31,8 @@ export const WeatherHero = () => {
           'lab(64.272% 57.1788 90.3583)',
         ]}
       />
-      <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-cyan-500/20 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-violet-500/20 blur-[120px]" />
+      <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-cyan-500/20 blur-[120px]" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-violet-500/20 blur-[120px]" />
 
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <div className="flex flex-col items-start gap-10 md:gap-20">
@@ -68,12 +68,12 @@ export const WeatherHero = () => {
           <ViewModeToggle classNames="hidden md:flex" />
         </div>
 
-        <div className="relative h-100 md:h-full">
-          <DataStatus className="absolute left-0 top-5" />
+        <div className="relative flex flex-col justify-center items-center">
+          <DataStatus className="absolute top-0 left-0" />
 
-          <Globe />
+          <Globe className="mt-[34px]" />
 
-          <StationStatus className="absolute right-0 bottom-5" />
+          <StationStatus className="ml-auto" />
         </div>
       </div>
     </section>

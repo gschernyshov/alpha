@@ -42,11 +42,7 @@ export const HumidityBar = () => {
         onMode={setMode}
       />
 
-      <WeatherCardContent
-        value={humidity}
-        unit={'%'}
-        otherValues={mode.label === initMode.label ? null : { humidity }}
-      />
+      <WeatherCardContent value={humidity} unit={'%'} />
 
       <WeatherCardFooter date={date}>
         <div className="relative w-full h-16 bg-gray-100 rounded-xl overflow-hidden">

@@ -1,14 +1,9 @@
-export { ViewModeToggle } from './view-mode'
-export { TemperatureBar } from './temperature'
-export { HumidityBar } from './humidity'
-export { LightGauge } from './illumination'
-export * from './watering'
+export { ViewModeToggle, useViewModeStore } from './view-mode'
+
 export { DataStatus } from './data-status'
 export { StationStatus } from './station-status'
 
-export { useViewModeStore } from './view-mode'
-
-export { ANCHOR_TEMPERATURE } from './temperature'
-export { ANCHOR_ILLUMINATION } from './illumination'
-export { ANCHOR_HUMIDITY } from './humidity'
-export { ANCHOR_WATERING } from './watering'
+export { TemperatureBar, ANCHOR_TEMPERATURE } from './temperature'
+export { HumidityBar, ANCHOR_HUMIDITY } from './humidity'
+export { LightGauge, ANCHOR_ILLUMINATION } from './illumination'
+export * from './watering'
