@@ -51,7 +51,7 @@ export const startWatering = async (
       })
     }
 
-    return NextResponse.json(null, { status: 204 })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
@@ -124,7 +124,7 @@ export const confirmWatering = async (
       })
     }
 
-    return NextResponse.json(null, { status: 204 })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 

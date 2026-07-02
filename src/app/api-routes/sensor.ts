@@ -130,7 +130,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       console.warn('Ошибка отправки сообщения в Telegram: ', error)
     }
 
-    return NextResponse.json(null, { status: 204 })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
