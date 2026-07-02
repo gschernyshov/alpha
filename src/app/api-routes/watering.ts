@@ -4,7 +4,7 @@ import { prisma } from '@/shared/db/prisma'
 import { WaterStatus } from '@/shared/db/generated/prisma/enums'
 import { stationClient } from '@/shared/api'
 
-const API_KEY = process.env.API_KEY
+const STATION_API_KEY = process.env.STATION_API_KEY
 
 export const startWatering = async (
   request: NextRequest
@@ -66,8 +66,8 @@ export const confirmWatering = async (
   request: NextRequest
 ): Promise<NextResponse> => {
   try {
-    const xApiKey = request.headers.get('x-api-key')
-    if (xApiKey !== API_KEY) {
+    const xApiKey = request.headers.get('X-API-Key')
+    if (xApiKey !== STATION_API_KEY) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

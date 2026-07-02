@@ -3,12 +3,12 @@ import { DateTime } from 'luxon'
 import { prisma } from '@/shared/db/prisma'
 import { sendTelegramMessage } from '@/shared/lib/telegram'
 
-const API_KEY = process.env.API_KEY
+const STATION_API_KEY = process.env.STATION_API_KEY
 
 export const sensor = async (request: NextRequest): Promise<NextResponse> => {
   try {
-    const xApiKey = request.headers.get('x-api-key')
-    if (xApiKey !== API_KEY) {
+    const xApiKey = request.headers.get('X-API-Key')
+    if (xApiKey !== STATION_API_KEY) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
