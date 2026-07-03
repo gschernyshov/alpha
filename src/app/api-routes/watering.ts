@@ -3,8 +3,14 @@ import { DateTime } from 'luxon'
 import { prisma } from '@/shared/db/prisma'
 import { WaterStatus } from '@/shared/db/generated/prisma/enums'
 import { stationClient } from '@/shared/api'
+import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const STATION_API_KEY = process.env.STATION_API_KEY
+const WATERING_EARLY_ACCESS_DAYS = parseInt(
+  process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2',
+  10
+)
+const TIMEZONE = process.env.NEXT_PUBLIC_TIMEZONE
 
 export const startWatering = async (
   request: NextRequest
@@ -23,12 +29,54 @@ export const startWatering = async (
 
     const plant = await prisma.plant.findUnique({
       where: { title },
+      select: {
+        id: true,
+        profile: {
+          select: {
+            wateringIntervalDays: true,
+          },
+        },
+        waterLogs: {
+          select: {
+            waterAt: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+        },
+      },
     })
 
     if (!plant) {
       return NextResponse.json(
         { error: `Растение "${title}" не найдено` },
         { status: 404 }
+      )
+    }
+
+    if (!plant?.waterLogs[0]?.waterAt) {
+      return NextResponse.json(
+        { error: 'Невозможно определить дату последнего полива' },
+        { status: 400 }
+      )
+    }
+
+    const lastWatering = DateTime.fromJSDate(
+      plant.waterLogs[0].waterAt
+    ).setZone(TIMEZONE)
+    const nextWatering = lastWatering.plus({
+      days: plant.profile?.wateringIntervalDays,
+    })
+    const now = DateTime.now().setZone(TIMEZONE)
+    const diffWatering = Math.round(nextWatering.diff(now).as('days') * 10) / 10
+
+    if (diffWatering > WATERING_EARLY_ACCESS_DAYS) {
+      return NextResponse.json(
+        {
+          error: `Полив разрешён не ранее чем за ${WATERING_EARLY_ACCESS_DAYS} дня до запланированного полива`,
+        },
+        { status: 403 }
       )
     }
 
@@ -47,8 +95,16 @@ export const startWatering = async (
     } catch {
       await prisma.waterLog.update({
         where: { id: waterLog.id },
-        data: { status: WaterStatus.FAILED },
+        data: { status: WaterStatus.FAILED, waterAt: DateTime.utc().toISO() },
       })
+
+      try {
+        await sendTelegramMessage(
+          `При попытке полива растения ${title} возникла ошибка`
+        )
+      } catch (error) {
+        console.warn('Ошибка отправки сообщения в Telegram: ', error)
+      }
     }
 
     return new NextResponse(null, { status: 204 })
