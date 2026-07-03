@@ -11,7 +11,7 @@ export const UpdateInfo = ({ date }: UpdateInfoProps) => {
     <div className="flex items-center gap-2 text-muted-foreground">
       <Info className="w-4 h-4" />
       <div className="flex flex-col gap-1 text-sm leading-none select-none">
-        <span>Обновлено {date ? timeAgo(date) : ' -- минут назад'}</span>
+        <span>Обновлено {timeAgo(date) ?? ' -- минут назад'}</span>
       </div>
     </div>
   )

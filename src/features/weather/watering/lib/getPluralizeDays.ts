@@ -3,7 +3,7 @@ import { Plant } from '../model/types'
 export const getPluralizeDays = (
   days: Plant['wateringIntervalDays']
 ): string => {
-  if (days === null) return '? дня'
+  if (days === null) return '-- дня'
 
   const absDays = Math.abs(days)
   const rem100 = absDays % 100
