@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getMode } from '../lib/getMode'
-import { type WeatherMode } from '@/entities/weather'
+import type { WeatherMode } from '@/entities/weather'
 
 type ModeState = {
   mode: WeatherMode | null

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { SoilMoisturePlants } from './types'
+import type { SoilMoisturePlants } from './types'
 
 type SoilMoisturePlantsState = {
   soilMoisturePlants: SoilMoisturePlants

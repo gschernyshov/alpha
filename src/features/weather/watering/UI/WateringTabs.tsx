@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Activity } from 'lucide-react'
-import { Plant } from '../model/types'
+import type { Plant } from '../model/types'
 import { getWateringInfo } from '../lib/getWateringInfo'
 import { getPluralizeDays } from '../lib/getPluralizeDays'
 import {

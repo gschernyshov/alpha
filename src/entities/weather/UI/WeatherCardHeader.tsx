@@ -3,7 +3,7 @@ import { ToggleMode } from '@/shared/UI/ToggleMode'
 
 interface WeatherCardHeaderProps {
   title: string
-  mode?: WeatherMode
+  mode?: WeatherMode | null
   availableModes?: WeatherMode[]
   onMode?: (mode: WeatherMode) => void
 }

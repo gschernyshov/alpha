@@ -1,4 +1,4 @@
-import { Plant } from '../model/types'
+import type { Plant } from '../model/types'
 
 interface WateringTitleProps {
   title: Plant['title']

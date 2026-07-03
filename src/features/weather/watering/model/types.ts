@@ -1,4 +1,4 @@
-import { WeatherDate } from '@/entities/weather'
+import type { WeatherDate } from '@/entities/weather'
 
 export type WaterStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'MANUAL'
 
