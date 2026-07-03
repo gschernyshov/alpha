@@ -1,32 +1,15 @@
 'use client'
 
-import Image from 'next/image'
-import { useState, useMemo } from 'react'
-import { Droplet } from 'lucide-react'
+import { useMemo } from 'react'
+import { WateringPlant } from './WateringPlant'
+import { WateringTitle } from './WateringTilte'
+import { WateringTabs } from './WateringTabs'
+import { WateringAction } from './WateringAction'
 import { useModeStore } from '../model/modeStore'
-import { useSoilMoisturePlantsStore } from '../model/soilMoisturePlantsStore'
 import type { Plant, Plants } from '../model/types'
 import { getMode, getAvailableModes } from '../lib/getMode'
-import { getWateringInfo } from '../lib/getWateringInfo'
-import { getPluralizeDays } from '../lib/getPluralizeDays'
-import { getHumidityColor } from '../lib/getHumidityColor'
 import { ANCHOR_WATERING } from '../config/anchor'
-import {
-  WeatherCard,
-  WeatherCardHeader,
-  safeValue,
-  timeAgo,
-} from '@/entities/weather'
-import { useIsMobile } from '@/shared/hooks/useIsMobile'
-import { Button } from '@/shared/UI/shadcn/button'
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from '@/shared/UI/shadcn/tabs'
-import { AlertMessage } from '@/shared/UI/AlertMessage'
-import { ExpandableTextSection } from '@/shared/UI/ExpandableTextSection'
+import { WeatherCard, WeatherCardHeader } from '@/entities/weather'
 
 interface WateringInfoProps {
   plants: Plants
@@ -34,18 +17,12 @@ interface WateringInfoProps {
 
 export const WateringInfo = ({ plants }: WateringInfoProps) => {
   const { mode, setMode } = useModeStore()
-  const soilMoisturePlants = useSoilMoisturePlantsStore(
-    state => state.soilMoisturePlants
-  )
-  const [isShowLastWaterDate, setIsShowLastWaterDate] = useState(false)
-
-  const isMobile = useIsMobile()
-
-  const plantFirst: Plant | undefined = plants[0]
 
   const plantsMap = useMemo(() => {
     return new Map(plants.map(plant => [plant.title, plant]))
   }, [plants])
+
+  const plantFirst: Plant | undefined = plants[0]
 
   const plant: Plant | undefined = useMemo(() => {
     if (mode && plantsMap.has(mode.label)) {
@@ -54,43 +31,11 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
     return plantFirst
   }, [mode, plantsMap, plantFirst])
 
-  const plantSections = useMemo(() => {
-    return (
-      [
-        {
-          value: 'description',
-          label: 'Описание',
-        },
-        {
-          value: 'lightRequirements',
-          label: 'Свет',
-        },
-        {
-          value: 'temperatureRequirements',
-          label: 'Температура',
-        },
-        {
-          value: 'wateringRequirements',
-          label: 'Полив',
-        },
-      ] as const
-    ).map(({ value, label }) => ({
-      value,
-      label,
-      content: plant?.[value] ?? 'Данные отсутствуют',
-    }))
-  }, [plant])
+  const currentMode = mode ?? getMode(plant.title)
 
-  const { nextWatering, toWatering, diffWatering } = getWateringInfo(
-    plant?.lastWaterDate,
-    plant?.wateringIntervalDays
-  )
-
-  const soilMoisturePlant = useMemo(() => {
-    return soilMoisturePlants.find(
-      soilMoisturePlant => soilMoisturePlant.title === plant?.title
-    )
-  }, [soilMoisturePlants, plant?.title])
+  const availableModes = useMemo(() => {
+    return getAvailableModes(plants.map(plant => plant.title))
+  }, [plants])
 
   if (plants.length === 0 || !plant) {
     return null
@@ -104,149 +49,20 @@ export const WateringInfo = ({ plants }: WateringInfoProps) => {
     >
       <WeatherCardHeader
         title={'Автополив'}
-        mode={mode ?? getMode(plant.title)}
-        availableModes={getAvailableModes(plants.map(plant => plant.title))}
+        mode={currentMode}
+        availableModes={availableModes}
         onMode={setMode}
       />
-
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 h-full">
-        <div className="relative min-w-full md:min-w-[400px] min-h-[300px] md:pt-10">
-          <Image
-            alt="Изображение растения"
-            src={`/plants/${plant.img}`}
-            width={isMobile ? 300 : 400}
-            height={isMobile ? 300 : 400}
-          />
-
-          <div
-            className="absolute bottom-0 md:bottom-3 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 px-2 py-1.5 bg-black/30 backdrop-blur-sm rounded-lg shadow-md text-white select-none cursor-pointer"
-            onClick={() =>
-              plant.lastWaterDate && setIsShowLastWaterDate(prev => !prev)
-            }
-          >
-            <span className="text-[10px] font-medium uppercase tracking-wide opacity-80">
-              Влажность почвы
-            </span>
-
-            <div className="flex items-center gap-1.5">
-              <Droplet
-                className="w-4 h-4 shrink-0"
-                style={{
-                  color: getHumidityColor(soilMoisturePlant?.value ?? null),
-                  fill: 'currentColor',
-                }}
-              />
-              <span className="font-semibold text-sm">
-                {safeValue(soilMoisturePlant?.value ?? null)}%
-              </span>
-            </div>
-
-            {soilMoisturePlant?.date && isShowLastWaterDate && (
-              <div className="text-xs tracking-wide opacity-80">
-                обновлено {timeAgo(soilMoisturePlant?.date ?? null)}
-              </div>
-            )}
-          </div>
-        </div>
-
+        <WateringPlant title={plant.title} img={plant.img} />
         <div className="flex flex-col justify-between items-start gap-8 h-full">
-          <div className="flex flex-col gap-2">
-            <span className="text-4xl font-semibold">{plant.title}</span>
-            {plant.name && (
-              <p className="text-md">
-                {plant.name}
-                {plant.latinName && (
-                  <span className="text-muted-foreground">
-                    {' '}
-                    ({plant.latinName})
-                  </span>
-                )}
-              </p>
-            )}
-          </div>
-
-          <Tabs
-            defaultValue="description"
-            className="flex flex-col gap-4 w-full"
-          >
-            <TabsList className="flex justify-start flex-wrap gap-1.5 h-auto! p-0 md:p-1 bg-white/0 md:bg-emerald-50 md:dark:bg-slate-800 rounded-lg">
-              {plantSections.map(({ value, label }) => (
-                <TabsTrigger
-                  key={value}
-                  value={value}
-                  defaultValue="description"
-                  className="
-                    flex-[0_0_auto]
-                    px-3 py-1.5 rounded-md text-sm font-medium
-                    bg-emerald-100 hover:bg-emerald-200
-                    dark:bg-slate-700 dark:hover:bg-slate-600
-                    text-emerald-700 hover:text-emerald-800
-                    data-[state=active]:bg-emerald-600 data-[state=active]:hover:bg-emerald-600
-                    data-[state=active]:text-white data-[state=active]:hover:text-white
-                    cursor-pointer
-                  "
-                >
-                  {label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {plantSections.map(({ value, content }) => (
-              <TabsContent key={value} value={value}>
-                <ExpandableTextSection className="text-sm text-muted-foreground">
-                  {content}
-                </ExpandableTextSection>
-              </TabsContent>
-            ))}
-          </Tabs>
-
-          <div className="flex flex-row justify-between md:justify-start items-center gap-4 md:gap-15 w-full">
-            <div
-              className={`flex flex-col items-start gap-4 md:gap-2 ${diffWatering === null ? 'text-black dark:text-white/80' : diffWatering >= 0 ? 'text-black dark:text-white/80' : 'text-red-400'}`}
-            >
-              <span className="text-md font-semibold">
-                {diffWatering === null
-                  ? 'Следующий полив через'
-                  : diffWatering >= 0
-                    ? 'Следующий полив через'
-                    : 'Полив пропущен'}
-              </span>
-
-              <div className="flex flex-col md:flex-row items-baseline gap-2 md:gap-4">
-                <span className="text-4xl font-bold">
-                  {toWatering ?? '? дня'}
-                </span>
-
-                {nextWatering && (
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {nextWatering}
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-1 px-3 md:px-0 py-2 md:py-0 bg-emerald-600 dark:bg-emerald-600/20 md:bg-white/0 md:dark:bg-white/0 rounded-md text-xs md:text-sm text-gray-100 md:text-muted-foreground">
-                <span className="font-medium">
-                  полив каждые {getPluralizeDays(plant.wateringIntervalDays)}
-                </span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              disabled={
-                diffWatering !== null && diffWatering <= 2 ? false : true
-              }
-              aria-label="Полить растение"
-              className="w-18 md:w-27 h-38 md:h-27 shrink-0 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
-            >
-              <Droplet className="h-8 w-8" />
-            </Button>
-          </div>
-
-          <AlertMessage
-            title="Ручной полив"
-            message={`Кнопка ручного полива станет доступна за 2 дня до следующего полива. До ${nextWatering ?? '?'} вы сможете полить растение самостоятельно и отменить автоматический полив.`}
+          <WateringTitle
+            title={plant.title}
+            name={plant.name}
+            latinName={plant.latinName}
           />
+          <WateringTabs plant={plant} />
+          <WateringAction plant={plant} />
         </div>
       </div>
     </WeatherCard>

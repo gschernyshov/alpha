@@ -24,6 +24,12 @@ export const getWateringInfo = (
   const diffWatering = Math.round(nextWatering.diff(now).as('days') * 10) / 10
 
   return {
+    lastWatering: lastWatering.toLocaleString({
+      day: 'numeric',
+      month: 'long',
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
     nextWatering: nextWatering.toLocaleString({
       day: 'numeric',
       month: 'long',

@@ -1,5 +1,7 @@
 import { WeatherDate } from '@/entities/weather'
 
+export type WaterStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'MANUAL'
+
 export type Plant = {
   title: string
   name: string | null
@@ -10,6 +12,7 @@ export type Plant = {
   temperatureRequirements: string | null
   wateringRequirements: string | null
   wateringIntervalDays: number | null
+  waterStatus: WaterStatus | null
   lastWaterDate: string | null
 }
 
@@ -28,3 +31,5 @@ export type SoilMoisturePlant = {
 export type SoilMoisturePlants = SoilMoisturePlant[]
 
 export type SoilMoistureApiResponse = SoilMoisturePlant[]
+
+export type WateringApiRequest = Pick<Plant, 'title'>
