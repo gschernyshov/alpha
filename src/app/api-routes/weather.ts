@@ -75,7 +75,7 @@ export const weather = async (): Promise<NextResponse> => {
         pressure: outdoorData?.main?.pressure ?? null,
         windSpeed: outdoorData?.wind?.speed ?? null,
         time: outdoorData?.dt
-          ? DateTime.fromSeconds(outdoorData.dt).toISO()
+          ? DateTime.fromSeconds(outdoorData.dt).toUTC().toISO()
           : null,
       },
     }

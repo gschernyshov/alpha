@@ -10,7 +10,6 @@ const WATERING_EARLY_ACCESS_DAYS = parseInt(
   process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2',
   10
 )
-const TIMEZONE = process.env.NEXT_PUBLIC_TIMEZONE
 
 export const startWatering = async (
   request: NextRequest
@@ -62,13 +61,11 @@ export const startWatering = async (
       )
     }
 
-    const lastWatering = DateTime.fromJSDate(
-      plant.waterLogs[0].waterAt
-    ).setZone(TIMEZONE)
+    const lastWatering = DateTime.fromJSDate(plant.waterLogs[0].waterAt).toUTC()
     const nextWatering = lastWatering.plus({
       days: plant.profile?.wateringIntervalDays,
     })
-    const now = DateTime.now().setZone(TIMEZONE)
+    const now = DateTime.now().toUTC()
     const diffWatering = Math.round(nextWatering.diff(now).as('days') * 10) / 10
 
     if (diffWatering > WATERING_EARLY_ACCESS_DAYS) {
