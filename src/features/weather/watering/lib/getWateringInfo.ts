@@ -1,4 +1,4 @@
-import { Plant } from '../model/types'
+import type { Plant } from '../model/types'
 import { dateTime } from '@/entities/weather'
 
 export const getWateringInfo = (

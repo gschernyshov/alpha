@@ -1,5 +1,5 @@
 import { Leaf } from 'lucide-react'
-import { WeatherMode } from '@/entities/weather'
+import type { WeatherMode } from '@/entities/weather'
 
 export const getMode = (label: WeatherMode['label']): WeatherMode => {
   return {

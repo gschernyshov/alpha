@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo, useCallback } from 'react'
 import { usePlantsStore } from './plantsStore'
 import type { Plant, Plants } from './types'
 import { fetchPlants } from '../api/fetchPlants'
-import { Mode } from '@/shared/UI/ToggleMode'
+import type { Mode } from '@/shared/UI/ToggleMode'
 
 interface UsePlantProps {
   initPlants: Plants

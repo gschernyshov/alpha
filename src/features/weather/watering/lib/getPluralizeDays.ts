@@ -1,4 +1,4 @@
-import { Plant } from '../model/types'
+import type { Plant } from '../model/types'
 
 export const getPluralizeDays = (
   days: Plant['wateringIntervalDays']

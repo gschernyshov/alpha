@@ -26,8 +26,8 @@ interface WeatherResult {
 }
 
 const CITY_COORDS = {
-  lat: process.env.CITY_COORDS_LAT || 55.7558,
-  lon: process.env.CITY_COORDS_LON || 37.6173,
+  lat: process.env.NEXT_PUBLIC_CITY_COORDS_LAT || 55.7558,
+  lon: process.env.NEXT_PUBLIC_CITY_COORDS_LON || 37.6173,
 } as const
 
 export const weather = async (): Promise<NextResponse> => {

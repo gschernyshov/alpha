@@ -1,4 +1,4 @@
-import { SoilMoisturePlant } from '../model/types'
+import type { SoilMoisturePlant } from '../model/types'
 
 export const getHumidityColor = (value: SoilMoisturePlant['value']) => {
   if (!value) return '#ef4444'

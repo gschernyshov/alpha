@@ -8,7 +8,7 @@ import {
 import {
   useSoilMoisturePlantsStore,
   fetchSoilMoisture,
-  SoilMoistureApiResponse,
+  type SoilMoistureApiResponse,
 } from '@/features/weather'
 
 interface UseWeatherPollingProps {
