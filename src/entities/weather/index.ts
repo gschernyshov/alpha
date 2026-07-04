@@ -6,6 +6,7 @@ export { WeatherCardFooter } from './UI/WeatherCardFooter'
 export * from './model/types'
 export { useWeatherStore } from './model/weatherStore'
 
+export { createWeatherMetadata } from './lib/createWeatherMetadata'
 export { safeValue } from './lib/safeValue'
 export * from './lib/datetime'
 

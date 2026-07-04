@@ -7,9 +7,9 @@ interface MetaData {
 export const metaData: MetaData = {
   layout: {
     title: {
-      default: 'Погода',
-      template: '%s | Погода',
+      default: 'BlackStage Alpha',
+      template: '%s | BlackStage Alpha',
     },
-    description: 'Мониторинг погодных условий в реальном времени.',
+    description: '',
   },
 }

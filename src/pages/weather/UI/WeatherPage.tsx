@@ -4,7 +4,11 @@ import {
   WeatherMonitoring,
 } from '@/widgets/weather'
 import { fetchSoilMoisture } from '@/features/weather'
-import { fetchWeather } from '@/entities/weather'
+import { createWeatherMetadata, fetchWeather } from '@/entities/weather'
+
+export const generateMetadata = async () => {
+  return createWeatherMetadata()
+}
 
 export const WeatherPage = async () => {
   const [weather, soilMoisture] = await Promise.all([

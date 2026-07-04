@@ -1,2 +1,2 @@
 export const dynamic = 'force-dynamic'
-export { WeatherPage as default } from '@/pages/weather'
+export { generateMetadata, WeatherPage as default } from '@/pages/weather'
