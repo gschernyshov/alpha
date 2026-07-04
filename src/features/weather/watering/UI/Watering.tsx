@@ -2,7 +2,7 @@ import { WateringInfo } from './WateringInfo'
 import { fetchPlants } from '../api/fetchPlants'
 
 export const Watering = async () => {
-  const plants = await fetchPlants()
+  const initPlants = await fetchPlants()
 
-  return <WateringInfo plants={plants} />
+  return <WateringInfo initPlants={initPlants} />
 }

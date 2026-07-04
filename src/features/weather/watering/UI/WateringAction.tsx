@@ -1,17 +1,47 @@
+import { useEffect } from 'react'
 import { Droplet } from 'lucide-react'
-import { Plant } from '../model/types'
+import { toast } from 'sonner'
+import { useWateringStart } from '../model/useWateringStart'
+import type { Plant } from '../model/types'
 import { getWateringInfo } from '../lib/getWateringInfo'
 import { Button } from '@/shared/UI/shadcn/button'
 import { AlertMessage } from '@/shared/UI/AlertMessage'
 
 interface WateringActionProps {
-  plant: Plant
+  title: Plant['title']
+  lastWaterDate: Plant['lastWaterDate']
+  wateringIntervalDays: Plant['wateringIntervalDays']
+  reloadPlants: () => Promise<void>
 }
 
-export const WateringAction = ({ plant }: WateringActionProps) => {
+const NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS =
+  process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS
+
+export const WateringAction = ({
+  title,
+  lastWaterDate,
+  wateringIntervalDays,
+  reloadPlants,
+}: WateringActionProps) => {
+  const { isLoading, isSuccess, error, startWatering } = useWateringStart({
+    reloadPlants,
+  })
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(`Растение ${title} полито`)
+    }
+  }, [title, isSuccess])
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+  }, [error])
+
   const { nextWatering, toWatering, diffWatering } = getWateringInfo(
-    plant?.lastWaterDate,
-    plant?.wateringIntervalDays
+    lastWaterDate,
+    wateringIntervalDays
   )
 
   return (
@@ -39,9 +69,17 @@ export const WateringAction = ({ plant }: WateringActionProps) => {
 
         <Button
           variant="outline"
-          disabled={diffWatering !== null && diffWatering <= 2 ? false : true}
           aria-label="Полить растение"
-          className="w-18 md:w-27 h-38 md:h-27 shrink-0 bg-emerald-600 hover:bg-emerald-700 rounded-full shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 focus:ring-emerald-100"
+          disabled={
+            isLoading ||
+            (diffWatering !== null &&
+              diffWatering <=
+                parseInt(NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2'))
+              ? false
+              : true
+          }
+          onClick={() => startWatering(title)}
+          className={`w-18 md:w-27 h-38 md:h-27 shrink-0 ${isLoading ? 'bg-sky-600 hover:bg-sky-700' : 'bg-emerald-600 hover:bg-emerald-700'} rounded-full shadow-md text-white cursor-pointer transition-all duration-300 hover:scale-105 hover:text-white focus:ring-2 ${isLoading ? 'focus:ring-sky-100' : 'focus:ring-emerald-100'}`}
         >
           <Droplet className="h-8 w-8" />
         </Button>
@@ -49,7 +87,7 @@ export const WateringAction = ({ plant }: WateringActionProps) => {
 
       <AlertMessage
         title="Ручной полив"
-        message={`Кнопка ручного полива станет доступна за 2 дня до следующего полива. До ${nextWatering ?? '--'} вы сможете полить растение самостоятельно и отменить автоматический полив.`}
+        message={`Кнопка ручного полива станет доступна за ${NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS} дня до следующего полива. До ${nextWatering ?? '--'} вы сможете полить растение самостоятельно и отменить автоматический полив.`}
         className="bg-emerald-50 dark:bg-slate-800"
       />
     </div>
