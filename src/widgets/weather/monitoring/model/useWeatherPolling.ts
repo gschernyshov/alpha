@@ -49,7 +49,7 @@ export const useWeatherPolling = ({
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Weather request cancelled')
-        } else if ((error as Error).name !== 'AbortError') {
+        } else {
           console.error('Weather polling error: ', error)
         }
       }

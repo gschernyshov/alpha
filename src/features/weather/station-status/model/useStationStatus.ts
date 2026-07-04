@@ -29,7 +29,7 @@ export const useStationStatus = ({
 
       setStatus('loading')
       try {
-        await fetchSatusStation()
+        fetchSatusStation(abortController.signal)
 
         setStatus('online')
       } catch (error) {
@@ -37,7 +37,7 @@ export const useStationStatus = ({
 
         if (axios.isCancel(error)) {
           console.log('Station Status request cancelled')
-        } else if ((error as Error).name !== 'AbortError') {
+        } else {
           console.error('Station Status polling error: ', error)
         }
       }

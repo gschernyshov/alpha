@@ -47,7 +47,7 @@ export const useWateringStart = ({ reloadPlants }: UseWateringStartProps) => {
               'Ошибка при поливе растения',
           }))
 
-          console.error('WateringStart request error:', error)
+          console.error('Watering request error: ', error)
         }
       } finally {
         setState(prev => ({ ...prev, isLoading: false }))
