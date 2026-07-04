@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Activity } from 'lucide-react'
-import type { Plant } from '../model/types'
+import { WaterStatus, type Plant } from '../model/types'
 import { getWateringInfo } from '../lib/getWateringInfo'
 import { getPluralizeDays } from '../lib/getPluralizeDays'
 import {
@@ -53,13 +53,13 @@ export const WateringTabs = ({ plant }: WateringTabsProps) => {
           ? (plant[value] ?? 'Данные отсутствуют')
           : (() => {
               const statusText =
-                plant.waterStatus === 'PENDING'
+                plant.waterStatus === WaterStatus.Pending
                   ? `Запрос на последний полив был отправлен ${lastWatering} (ожидание подтверждения).\n`
-                  : plant.waterStatus === 'MANUAL'
+                  : plant.waterStatus === WaterStatus.Manual
                     ? `Последний полив был осуществлён в ручном режиме ${lastWatering}.\n`
-                    : plant.waterStatus === 'SUCCESS'
+                    : plant.waterStatus === WaterStatus.Success
                       ? `Последний полив был осуществлён в автоматическом режиме ${lastWatering}.\n`
-                      : plant.waterStatus === 'FAILED'
+                      : plant.waterStatus === WaterStatus.Failed
                         ? `Не удалось отправить запрос на полив ${lastWatering}.\n`
                         : ''
 

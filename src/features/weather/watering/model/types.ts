@@ -1,6 +1,11 @@
 import type { WeatherDate } from '@/entities/weather'
 
-export type WaterStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'MANUAL'
+export enum WaterStatus {
+  Pending = 'PENDING',
+  Success = 'SUCCESS',
+  Failed = 'FAILED',
+  Manual = 'MANUAL',
+}
 
 export type Plant = {
   title: string
