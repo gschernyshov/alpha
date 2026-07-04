@@ -32,7 +32,7 @@ export const WateringInfo = ({ initPlants }: WateringInfoProps) => {
       id={ANCHOR_WATERING}
       isLoading={isLoadingPlants}
       colors={['#9CAF88', '#B7C9B2', '#8A9A8B']}
-      classNames="w-full bg-gradient-to-br from-[#E9F5E9] via-[#E0F2E1] to-[#D4E7D6] dark:from-slate-800 dark:via-slate-700 dark:to-slate-700"
+      classNames="w-full bg-gradient-to-br from-[#E9F5E9] via-[#E0F2E1] to-[#D4E7D6] dark:from-slate-800 dark:via-slate-700 dark:to-slate-700 select-none"
     >
       <WeatherCardHeader
         title={'Автополив'}
