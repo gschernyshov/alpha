@@ -29,7 +29,7 @@ export const useStationStatus = ({
 
       setStatus('loading')
       try {
-        fetchSatusStation(abortController.signal)
+        await fetchSatusStation(abortController.signal)
 
         setStatus('online')
       } catch (error) {
