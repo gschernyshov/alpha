@@ -87,7 +87,7 @@ export const WateringAction = ({
 
       <AlertMessage
         title="Ручной полив"
-        message={`Кнопка ручного полива станет доступна за ${NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS} дня до следующего полива. До ${nextWatering ?? '--'} вы сможете полить растение самостоятельно и отменить автоматический полив.`}
+        message={`Кнопка ручного полива станет доступна за ${NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2'} дня до следующего полива. До ${nextWatering ?? '--'} вы сможете полить растение самостоятельно и отменить автоматический полив.`}
         className="bg-emerald-50 dark:bg-slate-800"
       />
     </div>

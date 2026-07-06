@@ -54,13 +54,13 @@ export const WateringTabs = ({ plant }: WateringTabsProps) => {
           : (() => {
               const statusText =
                 plant.waterStatus === WaterStatus.Pending
-                  ? `Запрос на последний полив был отправлен ${lastWatering} (ожидание подтверждения).\n`
+                  ? `Запрос на последний полив был отправлен ${lastWatering ?? '--'} (ожидание подтверждения).\n`
                   : plant.waterStatus === WaterStatus.Manual
-                    ? `Последний полив был осуществлён в ручном режиме ${lastWatering}.\n`
+                    ? `Последний полив был осуществлён в ручном режиме ${lastWatering ?? '--'}.\n`
                     : plant.waterStatus === WaterStatus.Success
-                      ? `Последний полив был осуществлён в автоматическом режиме ${lastWatering}.\n`
+                      ? `Последний полив был осуществлён в автоматическом режиме ${lastWatering ?? '--'}.\n`
                       : plant.waterStatus === WaterStatus.Failed
-                        ? `Не удалось отправить запрос на полив ${lastWatering}.\n`
+                        ? `Не удалось отправить запрос на полив ${lastWatering ?? '--'}.\n`
                         : ''
 
               const pluralizedInterval = getPluralizeDays(

@@ -39,8 +39,8 @@ export const WateringPlant = ({ title, img }: WateringPlantProps) => {
         <div
           className="absolute bottom-0 md:bottom-3 right-10 md:left-20 md:right-auto flex flex-col gap-1.5 px-2 py-1.5 bg-black/30 backdrop-blur-sm rounded-lg shadow-md text-white select-none cursor-pointer"
           onClick={() => setIsShowLastSoilMoistureDate(prev => !prev)}
-          onMouseEnter={() => setIsShowLastSoilMoistureDate(true)}
-          onMouseLeave={() => setIsShowLastSoilMoistureDate(false)}
+          onMouseEnter={() => !isMobile && setIsShowLastSoilMoistureDate(true)}
+          onMouseLeave={() => !isMobile && setIsShowLastSoilMoistureDate(false)}
         >
           <span className="text-[10px] font-medium uppercase tracking-wide opacity-80">
             Влажность почвы

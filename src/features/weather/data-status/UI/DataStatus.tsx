@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { getStatus } from '../lib/getStatus'
 import { statusColors } from '../config/statusColors'
 import { useWeatherStore, timeAgo } from '@/entities/weather'
+import { useIsMobile } from '@/shared/hooks/useIsMobile'
 
 interface DataStatusProps {
   className?: string
@@ -13,6 +14,7 @@ export const DataStatus = ({ className = '' }: DataStatusProps) => {
   const indoorDate = useWeatherStore(state => state.indoor.date)
   const outdoorTime = useWeatherStore(state => state.outdoor.time)
   const [isShowDate, setIsShowDate] = useState(false)
+  const isMobile = useIsMobile()
 
   const status = useMemo(() => getStatus(indoorDate), [indoorDate])
 
@@ -41,8 +43,8 @@ export const DataStatus = ({ className = '' }: DataStatusProps) => {
     <div
       className={`flex flex-col gap-3 px-3 py-1.5 ${styles.bg} backdrop-blur border ${styles.border} rounded-md select-none z-100 cursor-pointer ${className}`}
       onClick={() => setIsShowDate(prev => !prev)}
-      onMouseEnter={() => setIsShowDate(true)}
-      onMouseLeave={() => setIsShowDate(false)}
+      onMouseEnter={() => !isMobile && setIsShowDate(true)}
+      onMouseLeave={() => !isMobile && setIsShowDate(false)}
     >
       <div className="flex items-center gap-2">
         <span
