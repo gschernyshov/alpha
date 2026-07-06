@@ -6,22 +6,27 @@ import { stationClient } from '@/shared/api'
 import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const STATION_API_KEY = process.env.STATION_API_KEY
+const WATERING_MODE = process.env.WATERING_MODE
 const WATERING_EARLY_ACCESS_DAYS = parseInt(
   process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2',
   10
 )
 
+interface StartWateringRequest {
+  title: string
+}
+
 export const startWatering = async (
   request: NextRequest
 ): Promise<NextResponse> => {
   try {
-    const body = await request.json()
+    const body: StartWateringRequest = await request.json()
 
     const { title } = body
 
     if (!title || typeof title !== 'string') {
       return NextResponse.json(
-        { error: 'Требуется "title" растения' },
+        { error: 'Требуется title растения' },
         { status: 400 }
       )
     }
@@ -30,6 +35,7 @@ export const startWatering = async (
       where: { title },
       select: {
         id: true,
+        title: true,
         profile: {
           select: {
             wateringIntervalDays: true,
@@ -49,7 +55,7 @@ export const startWatering = async (
 
     if (!plant) {
       return NextResponse.json(
-        { error: `Растение "${title}" не найдено` },
+        { error: `Растение ${title} не найдено` },
         { status: 404 }
       )
     }
@@ -77,28 +83,62 @@ export const startWatering = async (
       )
     }
 
-    const waterLog = await prisma.waterLog.create({
-      data: {
+    const plants =
+      WATERING_MODE === 'ONE'
+        ? [{ id: plant.id, title: plant.title }]
+        : await prisma.plant.findMany({
+            select: { id: true, title: true },
+          })
+    const plantMap = new Map(plants.map(plant => [plant.id, plant.title]))
+
+    const waterData = await prisma.$transaction(async tx => {
+      const batchId = crypto.randomUUID()
+
+      const waterLogData = plants.map(plant => ({
+        batchId,
         plantId: plant.id,
         status: WaterStatus.PENDING,
-      },
+      }))
+
+      await tx.waterLog.createMany({
+        data: waterLogData,
+      })
+
+      const waterLogs = await tx.waterLog.findMany({
+        where: {
+          batchId,
+        },
+        select: { id: true, plantId: true },
+      })
+
+      return waterLogs.map(waterLog => ({
+        plant: plantMap.get(waterLog.plantId),
+        waterLog: waterLog.id,
+      }))
     })
 
     try {
       await stationClient.post('/watering', {
         title,
-        waterLog: waterLog.id,
+        waterData,
       })
     } catch {
-      await prisma.waterLog.update({
-        where: { id: waterLog.id },
-        data: { status: WaterStatus.FAILED, waterAt: DateTime.utc().toISO() },
+      const waterLogs = waterData.map(item => item.waterLog)
+      await prisma.waterLog.updateMany({
+        where: { id: { in: waterLogs } },
+        data: {
+          status: WaterStatus.FAILED,
+          waterAt: DateTime.utc().toISO(),
+        },
       })
 
+      const errorMsg =
+        WATERING_MODE === 'ONE'
+          ? `При попытке полива растения ${title} возникла ошибка`
+          : `Ошибка при массовом поливе. Обновлено ${waterLogs.length} задач.`
+
       try {
-        await sendTelegramMessage(
-          `При попытке полива растения ${title} возникла ошибка`
-        )
+        await sendTelegramMessage(errorMsg)
       } catch (error) {
         console.warn('Ошибка отправки сообщения в Telegram: ', error)
       }
