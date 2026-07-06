@@ -90,6 +90,8 @@ model WaterLog {
   status           WaterStatus?
   waterAt          DateTime?
 
+  batchId          String?    
+
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
