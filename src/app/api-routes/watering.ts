@@ -115,6 +115,11 @@ export const startWatering = async (
   }
 }
 
+interface ConfirmWateringRequest {
+  plants?: string[]
+  waterLogs?: number[]
+}
+
 export const confirmWatering = async (
   request: NextRequest
 ): Promise<NextResponse> => {
@@ -124,66 +129,102 @@ export const confirmWatering = async (
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const body: ConfirmWateringRequest = await request.json()
 
-    const { title, waterLog } = body
+    const { plants, waterLogs } = body
 
-    if (!title && !waterLog) {
+    if (!plants && !waterLogs) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, or waterLog' },
+        { error: 'Missing required fields: plants or waterLogs' },
         { status: 400 }
       )
     }
 
-    if (title && typeof title !== 'string') {
-      return NextResponse.json(
-        { error: 'Must be a string for "title"' },
-        { status: 400 }
-      )
-    }
-
-    if (waterLog && !Number.isFinite(waterLog)) {
-      return NextResponse.json(
-        { error: 'Must be a number for "waterLog"' },
-        { status: 400 }
-      )
-    }
-
-    if (title && !waterLog) {
-      const plant = await prisma.plant.findUnique({
-        where: { title },
-      })
-
-      if (!plant) {
+    if (plants) {
+      if (Array.isArray(plants) && plants.length !== 0) {
+        if (plants.some(title => typeof title !== 'string')) {
+          return NextResponse.json(
+            { error: 'All items in plants must be strings' },
+            { status: 400 }
+          )
+        }
+      } else {
         return NextResponse.json(
-          { error: `Plant "${title}" not found` },
-          { status: 404 }
+          { error: 'Must be an array for plants' },
+          { status: 400 }
         )
       }
-
-      await prisma.waterLog.create({
-        data: {
-          plantId: plant.id,
-          status: WaterStatus.MANUAL,
-          waterAt: DateTime.utc().toISO(),
-        },
-      })
     }
 
-    if (waterLog && !title) {
-      await prisma.waterLog.update({
-        where: { id: waterLog },
-        data: { status: WaterStatus.SUCCESS, waterAt: DateTime.utc().toISO() },
-      })
+    if (waterLogs) {
+      if (Array.isArray(waterLogs) && waterLogs.length !== 0) {
+        if (waterLogs.some(id => !Number.isInteger(id) || id <= 0)) {
+          return NextResponse.json(
+            { error: 'All items in waterLogs must be positive integers' },
+            { status: 400 }
+          )
+        }
+      } else {
+        return NextResponse.json(
+          { error: 'Must be an array for waterLogs' },
+          { status: 400 }
+        )
+      }
     }
+
+    await prisma.$transaction(async tx => {
+      if (plants) {
+        for (const title of plants) {
+          const plant = await tx.plant.findUnique({
+            where: { title },
+          })
+
+          if (!plant) {
+            throw new Error(`Plant ${title} not found`)
+          }
+
+          await tx.waterLog.create({
+            data: {
+              plantId: plant.id,
+              status: WaterStatus.MANUAL,
+              waterAt: DateTime.utc().toISO(),
+            },
+          })
+        }
+      }
+
+      if (waterLogs) {
+        for (const id of waterLogs) {
+          const existing = await tx.waterLog.findUnique({
+            where: { id },
+          })
+
+          if (!existing) {
+            throw new Error(`WaterLog with id ${id} not found`)
+          }
+
+          await tx.waterLog.update({
+            where: { id },
+            data: {
+              status: WaterStatus.SUCCESS,
+              waterAt: DateTime.utc().toISO(),
+            },
+          })
+        }
+      }
+    })
 
     return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    const isNotFoundError =
+      error instanceof Error && error.message.includes('not found')
+
+    const message =
+      error instanceof Error ? error.message : 'Internal server error'
+    const status = isNotFoundError ? 404 : 500
+
+    return NextResponse.json({ error: message }, { status })
   }
 }
