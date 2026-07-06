@@ -23,21 +23,24 @@ export const WateringAction = ({
   wateringIntervalDays,
   reloadPlants,
 }: WateringActionProps) => {
-  const { isLoading, isSuccess, error, startWatering } = useWateringStart({
-    reloadPlants,
-  })
+  const { isLoading, isSuccess, error, startWatering, reset } =
+    useWateringStart({
+      reloadPlants,
+    })
 
   useEffect(() => {
     if (isSuccess) {
       toast.success(`Растение ${title} полито`)
+      reset()
     }
-  }, [title, isSuccess])
+  }, [title, isSuccess, reset])
 
   useEffect(() => {
     if (error) {
       toast.error(error)
+      reset()
     }
-  }, [error])
+  }, [error, reset])
 
   const { nextWatering, toWatering, diffWatering } = getWateringInfo(
     lastWaterDate,

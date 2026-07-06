@@ -56,5 +56,9 @@ export const useWateringStart = ({ reloadPlants }: UseWateringStartProps) => {
     [reloadPlants]
   )
 
-  return { ...state, startWatering }
+  const reset = useCallback(() => {
+    setState({ isLoading: false, isSuccess: false, error: '' })
+  }, [])
+
+  return { ...state, startWatering, reset }
 }
