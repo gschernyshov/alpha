@@ -5,6 +5,19 @@ import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const STATION_API_KEY = process.env.STATION_API_KEY
 
+type Plant = {
+  title: string
+  soilMoisture: number
+}
+
+type SensorRequest = {
+  temperature: number
+  humidity: number
+  illumination: number
+  plants: Plant[]
+  measured: string
+}
+
 export const sensor = async (request: NextRequest): Promise<NextResponse> => {
   try {
     const xApiKey = request.headers.get('X-API-Key')
@@ -12,7 +25,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const body: SensorRequest = await request.json()
 
     const { temperature, humidity, illumination, plants, measured } = body
 
@@ -73,58 +86,65 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
     const measuredISO = measuredDate.toUTC().toISO()
 
     try {
-      await prisma.weather.create({
-        data: {
-          temperature,
-          humidity,
-          illumination,
-          measuredAt: measuredISO,
-        },
-      })
-    } catch (error) {
-      console.warn('Ошибка добавления данных метеостанции в БД: ', error)
-
-      throw error
-    }
-
-    for (const plant of plants) {
-      const { title, soilMoisture } = plant
-
-      try {
-        const { id } = (await prisma.plant.findUnique({
-          where: { title },
-          select: { id: true },
-        })) || { id: null }
-
-        if (!id) {
-          console.warn(
-            `Растение "${title}" не найдено в БД. Запись влажности почвы в БД пропущена`
-          )
-          continue
-        }
-
-        await prisma.soilMoisture.create({
+      await prisma.$transaction(async tx => {
+        await tx.weather.create({
           data: {
-            plantId: id,
-            value: soilMoisture,
+            temperature,
+            humidity,
+            illumination,
             measuredAt: measuredISO,
           },
         })
-      } catch (error) {
-        console.warn(
-          `Ошибка добавления данных влажности почвы в БД для "${title}": `,
-          error
-        )
 
-        throw error
-      }
+        for (const plant of plants) {
+          const { title, soilMoisture } = plant
+
+          const { id } = (await prisma.plant.findUnique({
+            where: { title },
+            select: { id: true },
+          })) || { id: null }
+
+          if (!id) {
+            console.warn(
+              `Растение ${title} не найдено в БД. Запись влажности почвы в БД пропущена`
+            )
+            throw new Error(`Plant ${title} not found`)
+          }
+
+          await tx.soilMoisture.create({
+            data: {
+              plantId: id,
+              value: soilMoisture,
+              measuredAt: measuredISO,
+            },
+          })
+        }
+      })
+    } catch (error) {
+      console.warn(
+        'Ошибка сохранения данных с сенсоров и датчиков в БД: ',
+        error
+      )
+      throw error
     }
 
     try {
       await sendTelegramMessage(
-        `Температура: ${temperature.toFixed(1)} °C\n` +
-          `Влажность: ${Math.min(100, Math.max(0, humidity)).toFixed(1)} %\n` +
-          `Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 1024) * 100)).toFixed(1)} %`
+        [
+          `Температура: ${temperature.toFixed(1)} °C`,
+          `Влажность: ${Math.min(100, Math.max(0, humidity)).toFixed(1)} %`,
+          `Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 750) * 100)).toFixed(1)} %`,
+          plants.length > 0
+            ? 'Влажность почвы растений:\n' +
+              plants
+                .map(
+                  plant =>
+                    `${plant.title}: ${Math.min(100, Math.max(0, (plant.soilMoisture / 750) * 100)).toFixed(1)} %`
+                )
+                .join('\n')
+            : '',
+          `\nДата считывания данных с сенсоров и датчиков: ${measured}`,
+        ].join('\n')
       )
     } catch (error) {
       console.warn('Ошибка отправки сообщения в Telegram: ', error)
@@ -134,9 +154,13 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
   } catch (error) {
     console.error('Внутренняя ошибка сервера: ', error)
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    const isNotFoundError =
+      error instanceof Error && error.message.includes('not found')
+
+    const message =
+      error instanceof Error ? error.message : 'Internal server error'
+    const status = isNotFoundError ? 404 : 500
+
+    return NextResponse.json({ error: message }, { status })
   }
 }
