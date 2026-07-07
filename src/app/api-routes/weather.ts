@@ -4,14 +4,14 @@ import { prisma } from '@/shared/db/prisma'
 import type { Weather } from '@/shared/db/generated/prisma/client'
 import { openWeatherClient } from '@/shared/api'
 
-interface IndoorData {
+type IndoorData = {
   temperature: number | null
   humidity: number | null
   illumination: number | null
   date: string | null
 }
 
-interface OutdoorData {
+type OutdoorData = {
   temp: number | null
   feelsLike: number | null
   humidity: number | null
@@ -20,7 +20,7 @@ interface OutdoorData {
   time: string | null
 }
 
-interface WeatherResult {
+type WeatherResult = {
   indoor: IndoorData
   outdoor: OutdoorData
 }

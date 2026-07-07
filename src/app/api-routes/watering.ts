@@ -12,7 +12,7 @@ const WATERING_EARLY_ACCESS_DAYS = parseInt(
   10
 )
 
-interface StartWateringRequest {
+type StartWateringRequest = {
   title: string
 }
 
@@ -135,7 +135,7 @@ export const startWatering = async (
       const errorMsg =
         WATERING_MODE === 'ONE'
           ? `При попытке полива растения ${title} возникла ошибка`
-          : `Ошибка при массовом поливе. Обновлено ${waterLogs.length} задач.`
+          : `Ошибка при массовом поливе растений. Обновлено ${waterLogs.length} задач.`
 
       try {
         await sendTelegramMessage(errorMsg)
@@ -155,7 +155,7 @@ export const startWatering = async (
   }
 }
 
-interface ConfirmWateringRequest {
+type ConfirmWateringRequest = {
   plants?: string[]
   waterLogs?: number[]
 }
