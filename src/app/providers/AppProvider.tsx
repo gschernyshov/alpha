@@ -19,7 +19,7 @@ export const AppProvider = ({ children, lang = 'ru' }: AppProviderProps) => {
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <Toaster />
+        <Toaster closeButton={true} />
       </body>
     </html>
   )
