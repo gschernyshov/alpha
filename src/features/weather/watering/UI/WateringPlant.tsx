@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useState, useMemo } from 'react'
 import { Droplet } from 'lucide-react'
 import { useSoilMoisturePlantsStore } from '../model/soilMoisturePlantsStore'
+import { MAX_SOIL_MOISTURE } from '../model/soilMoisture'
 import type { Plant } from '../model/types'
 import { getHumidityColor } from '../lib/getHumidityColor'
 import { timeAgo, safeValue } from '@/entities/weather'
@@ -55,7 +56,11 @@ export const WateringPlant = ({ title, img }: WateringPlantProps) => {
               }}
             />
             <span className="text-sm font-semibold">
-              {safeValue(soilMoisturePlant.value)}%
+              {safeValue(
+                soilMoisturePlant.value &&
+                  (soilMoisturePlant.value / MAX_SOIL_MOISTURE) * 100
+              )}
+              %
             </span>
           </div>
 
