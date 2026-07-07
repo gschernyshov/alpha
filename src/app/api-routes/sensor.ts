@@ -135,7 +135,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
           `Влажность: ${Math.min(100, Math.max(0, humidity)).toFixed(1)} %`,
           `Уровень освещения: ${Math.min(100, Math.max(0, (illumination / 750) * 100)).toFixed(1)} %`,
           plants.length > 0
-            ? 'Влажность почвы растений:\n' +
+            ? '\nВлажность почвы растений:\n' +
               plants
                 .map(
                   plant =>
@@ -143,7 +143,7 @@ export const sensor = async (request: NextRequest): Promise<NextResponse> => {
                 )
                 .join('\n')
             : '',
-          `\nДата считывания данных с сенсоров и датчиков: ${measured}`,
+          `\nДата считывания данных с сенсоров и датчиков: ${measuredDate.toFormat('EEEE F', { locale: 'ru' })}`,
         ].join('\n')
       )
     } catch (error) {
