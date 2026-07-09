@@ -8,8 +8,8 @@ import { cn } from '../../lib/utils'
 const MOVEMENT_DAMPING = 1400
 
 const CITY_COORDS = {
-  lat: Number(process.env.NEXT_PUBLIC_CITY_COORDS_LAT) || 55.7558,
-  lon: Number(process.env.NEXT_PUBLIC_CITY_COORDS_LON) || 37.6173,
+  lat: Number(process.env.NEXT_PUBLIC_CITY_COORDS_LAT || 55.7558),
+  lon: Number(process.env.NEXT_PUBLIC_CITY_COORDS_LON || 37.6173),
 } as const
 
 const GLOBE_CONFIG: COBEOptions = {

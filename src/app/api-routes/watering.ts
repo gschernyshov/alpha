@@ -7,9 +7,8 @@ import { sendTelegramMessage } from '@/shared/lib/telegram'
 
 const STATION_API_KEY = process.env.STATION_API_KEY
 const WATERING_MODE = process.env.WATERING_MODE
-const WATERING_EARLY_ACCESS_DAYS = parseInt(
-  process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2',
-  10
+const WATERING_EARLY_ACCESS_DAYS = Number(
+  process.env.NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2'
 )
 
 type StartWateringRequest = {
