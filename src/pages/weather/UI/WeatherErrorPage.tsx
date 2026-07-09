@@ -11,7 +11,7 @@ export const WeatherErrorPage = ({
 }: WeatherErrorPageProps) => {
   return (
     <AlertMessage
-      message={error.message}
+      message={error.message ?? 'Произошла неизвестная ошибка'}
       action={{ label: 'Перезагрузить', onClick: () => unstable_retry() }}
     />
   )
