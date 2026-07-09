@@ -77,7 +77,7 @@ export const WateringAction = ({
             isLoading ||
             (diffWatering !== null &&
               diffWatering <=
-                parseInt(NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2'))
+                Number(NEXT_PUBLIC_WATERING_EARLY_ACCESS_DAYS || '2'))
               ? false
               : true
           }
