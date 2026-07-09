@@ -7,7 +7,7 @@ import { fetchSoilMoisture } from '@/features/weather'
 import { createWeatherMetadata, fetchWeather } from '@/entities/weather'
 
 export const generateMetadata = async () => {
-  return createWeatherMetadata()
+  return await createWeatherMetadata()
 }
 
 export const WeatherPage = async () => {
