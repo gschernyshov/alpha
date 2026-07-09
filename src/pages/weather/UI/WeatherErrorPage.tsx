@@ -1,7 +1,18 @@
 import { AlertMessage } from '@/shared/UI/AlertMessage'
 
-export const WeatherErrorPage = () => {
+interface WeatherErrorPageProps {
+  error: Error & { digest?: string }
+  unstable_retry: () => void
+}
+
+export const WeatherErrorPage = ({
+  error,
+  unstable_retry,
+}: WeatherErrorPageProps) => {
   return (
-    <AlertMessage message="К сожалению, при загрузке страницы возникли проблемы!" />
+    <AlertMessage
+      message={error.message}
+      action={{ label: 'Перезагрузить', onClick: () => unstable_retry() }}
+    />
   )
 }
