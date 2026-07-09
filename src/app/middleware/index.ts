@@ -1,1 +1,1 @@
-export { processRateLimit } from '@/src/features/rate-limiting'
+export { processRateLimit } from '@/features/rate-limiting'

@@ -49,7 +49,7 @@ export const weather = async (): Promise<NextResponse> => {
         })
       ).data
     } catch (error) {
-      console.warn('Ошибка получения данных погоды из OpenWeather : ', error)
+      console.warn('Ошибка получения данных погоды из OpenWeather: ', error)
     }
 
     if (!latestIndoor && !outdoorData) {
