@@ -8,6 +8,11 @@ export const makeRateLimitResponse = (result: RateLimitFailure) => {
       message: `Лимит превышен. Попробуйте снова через ${result.retryAfter} сек.`,
       retryAfter: result.retryAfter,
     },
-    { status: 429 }
+    {
+      status: 429,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    }
   )
 }
